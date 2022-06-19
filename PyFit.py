@@ -17,10 +17,6 @@ def check_files():
     # workout_folder.touch(exist_ok=True)
 
 
-def startWorkoutButtonEvent():
-    print("START WORKOUT")
-
-
 def viewWorkoutButtonEvent():
     print("VIEW WORKOUT")
     file = open(os.path.join(path, "exercise.json"), "r")

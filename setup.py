@@ -12,7 +12,7 @@ DATA_FILES = []
 OPTIONS = {
     # 'iconfile': 'media/icon.icns',
     'plist': {'CFBundleShortVersionString': '0.1.0', },
-    'packages': ['tkinter', 'customtkinter', 'keyboard']}
+    'packages': ['tkinter', 'customtkinter']}
 
 setup(
     app=APP,

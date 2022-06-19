@@ -13,13 +13,14 @@ def check_files():
         os.makedirs(path)
         print("DIRECTORY CREATED")
     # Check if the needed files exist. If not, create them
-    # workout_folder = Path(os.path.join(path, "output.txt"))
-    # workout_folder.touch(exist_ok=True)
+    # workout_file = Path(os.path.join(path, "exercise.json"))
+    # workout_file.touch(exist_ok=True)
 
 
 def viewWorkoutButtonEvent():
     print("VIEW WORKOUT")
-    file = open(os.path.join(path, "exercise.json"), "r")
+    # file = open(os.path.join(path, "exercise.json"), "r")
+    file = open("exercise.json", "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]
@@ -53,7 +54,7 @@ def nextStep():
     global exerciseStep
     global exerciseSet
     global totalRepCount
-    file = open(os.path.join(path, "exercise.json"), "r")
+    file = open("exercise.json", "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]

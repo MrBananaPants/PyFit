@@ -31,7 +31,6 @@ def viewWorkoutButtonEvent():
         repsText["text"] = repsTextData
         setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
         setsText["text"] = setsTextData
-        # print(f'name: {exercise["name"]}, reps: {exercise["reps"]}, sets: {exercise["sets"]}')
 
 
 def raiseMainFrame():
@@ -47,6 +46,7 @@ def raiseWorkoutFrame():
 exerciseStep = 0
 exerciseSet = 0
 totalRepCount = 0
+showRestScreen = False
 
 
 def nextStep():
@@ -54,15 +54,21 @@ def nextStep():
     global exerciseStep
     global exerciseSet
     global totalRepCount
+    global showRestScreen
     file = open("exercise.json", "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]
+
     if totalRepCount == 0:
         print("first exercise")
         currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
         currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
-    if exerciseSet == exercises[exerciseStep]["sets"]:
+    if showRestScreen:
+        print("SHOW REST SCREEN")
+        currentStepLabel["text"] = "Rest"
+        currentSetLabel["text"] = ""
+    elif exerciseSet == exercises[exerciseStep]["sets"]:
         print("+1 exercise")
         exerciseStep += 1
         exerciseSet = 1
@@ -72,22 +78,25 @@ def nextStep():
         else:
             print("END OF EXERCISE")
             returnToMain()
-
     else:
         print("+1 set")
         exerciseSet += 1
         totalRepCount += exercises[exerciseStep]["reps"]
+        currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
         currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
         print(f"exerciseStep = {exerciseStep}, exerciseSet = {exerciseSet}, exerciseRep = {totalRepCount}")
+    showRestScreen = not showRestScreen
 
 
 def returnToMain():
     global exerciseStep
     global exerciseSet
     global totalRepCount
+    global showRestScreen
     exerciseStep = 0
     exerciseSet = 0
     totalRepCount = 0
+    showRestScreen = False
     raiseMainFrame()
     currentStepLabel["text"] = "Press START to begin"
     currentSetLabel["text"] = ""

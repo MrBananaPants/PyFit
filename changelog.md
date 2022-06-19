@@ -1,0 +1,1 @@
+- added automatic rest screen between sets

@@ -10,7 +10,7 @@ from setuptools import setup
 APP = ['PyFit.py']
 DATA_FILES = []
 OPTIONS = {
-    # 'iconfile': 'media/icon.icns',
+    'iconfile': 'media/icon.icns',
     'plist': {'CFBundleShortVersionString': '0.1.0', },
     'packages': ['tkinter', 'customtkinter']}
 

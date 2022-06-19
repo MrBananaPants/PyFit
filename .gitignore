@@ -2,3 +2,5 @@
 /.eggs/
 /build/
 /dist/
+!/exercise.json
+!/jsonTest.py

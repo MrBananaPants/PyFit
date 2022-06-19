@@ -17,7 +17,14 @@ def check_files():
     # workout_file.touch(exist_ok=True)
 
 
+def resetWorkoutView():
+    exerciseText["text"] = ""
+    repsText["text"] = ""
+    setsText["text"] = ""
+
+
 def viewWorkoutButtonEvent():
+    resetWorkoutView()
     print("VIEW WORKOUT")
     # file = open(os.path.join(path, "exercise.json"), "r")
     file = open("exercise.json", "r")

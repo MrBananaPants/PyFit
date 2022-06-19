@@ -23,6 +23,14 @@ def check_files():
         file.close()
 
 
+def createNewWorkoutFile():
+    dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
+    filename = str(dialog.get_input()) + ".json"
+    print("filename = " + filename)
+    workout_file = Path(os.path.join(path, filename))
+    workout_file.touch(exist_ok=True)
+
+
 def resetWorkoutView():
     exerciseText["text"] = ""
     repsText["text"] = ""
@@ -143,6 +151,9 @@ actionFrame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pad
 
 viewerFrame = ctk.CTkFrame(master=mainFrame, fg_color="#757575", corner_radius=10)
 viewerFrame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
+
+createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
+createNewWorkoutButton.place(relx=0.2, rely=0.05, anchor=ctk.CENTER)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
 startWorkoutButton.place(relx=0.33, rely=0.9, anchor=ctk.CENTER)

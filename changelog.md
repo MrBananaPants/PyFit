@@ -3,3 +3,4 @@
 - Added automatic rest screen between sets
 - Pressing `view workout` won't produce duplicate results anymore
 - Added next exercise info to rest screen
+- Changed location of default workout to user folder

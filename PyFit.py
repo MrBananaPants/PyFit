@@ -1,6 +1,7 @@
 import json
 import os
 import tkinter as tk
+from pathlib import Path
 
 import customtkinter as ctk
 
@@ -13,8 +14,13 @@ def check_files():
         os.makedirs(path)
         print("DIRECTORY CREATED")
     # Check if the needed files exist. If not, create them
-    # workout_file = Path(os.path.join(path, "exercise.json"))
-    # workout_file.touch(exist_ok=True)
+    workout_file = Path(os.path.join(path, "exercise.json"))
+    workout_file.touch(exist_ok=True)
+    if os.path.getsize(os.path.join(path, "exercise.json")) == 0:
+        file = open(os.path.join(path, "exercise.json"), "a")
+        file.write(
+            '{ "exercises": [ { "name": "Push-ups", "reps": 10, "sets": 5 }, { "name": "Leg raises", "reps": 30, "sets": 1 }, { "name": "Hip raises", "reps": 30, "sets": 1 }, { "name": "Toe touches", "reps": 30, "sets": 1 }, { "name": "Flutter kicks", "reps": 30, "sets": 1 }, { "name": "Sit-ups", "reps": 30, "sets": 1 }, { "name": "Pull-ups", "reps": 10, "sets": 1 }, { "name": "Chin-ups", "reps": 10, "sets": 1 }, { "name": "Biceps", "reps": 10, "sets": 1 }, { "name": "Forward fly", "reps": 10, "sets": 1 }, { "name": "Side fly", "reps": 10, "sets": 1 }, { "name": "Forearms", "reps": 50, "sets": 2 } ] }')
+        file.close()
 
 
 def resetWorkoutView():
@@ -26,8 +32,7 @@ def resetWorkoutView():
 def viewWorkoutButtonEvent():
     resetWorkoutView()
     print("VIEW WORKOUT")
-    # file = open(os.path.join(path, "exercise.json"), "r")
-    file = open("exercise.json", "r")
+    file = open(os.path.join(path, "exercise.json"), "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]
@@ -62,7 +67,7 @@ def nextStep():
     global exerciseSet
     global totalRepCount
     global showRestScreen
-    file = open("exercise.json", "r")
+    file = open(os.path.join(path, "exercise.json"), "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]
@@ -75,8 +80,8 @@ def nextStep():
         print("SHOW REST SCREEN")
         currentStepLabel["text"] = "Rest"
         if exerciseSet == exercises[exerciseStep]["sets"]:
-            if exerciseStep < len(exercises)-1:
-                currentSetLabel["text"] = f"Next up: {exercises[exerciseStep+1]['reps']}x {exercises[exerciseStep+1]['name']}"
+            if exerciseStep < len(exercises) - 1:
+                currentSetLabel["text"] = f"Next up: {exercises[exerciseStep + 1]['reps']}x {exercises[exerciseStep + 1]['name']}"
             else:
                 currentSetLabel["text"] = f'Click "Finish" to go back to main menu'
                 nextStepButton.set_text("Finish")

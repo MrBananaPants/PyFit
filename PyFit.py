@@ -74,7 +74,14 @@ def nextStep():
     if showRestScreen:
         print("SHOW REST SCREEN")
         currentStepLabel["text"] = "Rest"
-        currentSetLabel["text"] = ""
+        if exerciseSet == exercises[exerciseStep]["sets"]:
+            if exerciseStep < len(exercises)-1:
+                currentSetLabel["text"] = f"Next up: {exercises[exerciseStep+1]['reps']}x {exercises[exerciseStep+1]['name']}"
+            else:
+                currentSetLabel["text"] = f'Click "Finish" to go back to main menu'
+                nextStepButton.set_text("Finish")
+        else:
+            currentSetLabel["text"] = f"Next up: {exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
     elif exerciseSet == exercises[exerciseStep]["sets"]:
         print("+1 exercise")
         exerciseStep += 1

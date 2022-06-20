@@ -143,7 +143,7 @@ def nextStep():
     global exerciseSet
     global totalRepCount
     global showRestScreen
-    file = open(os.path.join(path, "default.json"), "r")
+    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
     data = file.read()
     source = json.loads(data)
     exercises = source["exercises"]

@@ -56,7 +56,6 @@ def resetWorkoutView():
 
 
 def viewWorkoutButtonEvent():
-    global lijst
     resetWorkoutView()
     print("VIEW WORKOUT")
     file = open(os.path.join(path, workoutOptionMenu.get()), "r")
@@ -71,6 +70,16 @@ def viewWorkoutButtonEvent():
             repsText["text"] = repsTextData
             setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
             setsText["text"] = setsTextData
+    else:
+        exerciseText["text"] = "(empty)"
+
+
+def create_toplevel(title, message):
+    window = ctk.CTkToplevel()
+    window.geometry("400x200")
+    finishedwind = ctk.CTkLabel(window, text=message, text_font=('Segoe UI', 15))
+    finishedwind.pack(side="top", fill="both", expand=True, padx=10, pady=10)
+    window.title(title)
 
 
 def raiseMainFrame():
@@ -79,8 +88,13 @@ def raiseMainFrame():
 
 
 def raiseWorkoutFrame():
-    workoutFrame.pack(anchor="w", fill="both", expand=True)
-    mainFrame.pack_forget()
+    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+    data = file.read()
+    if len(data) != 0:
+        workoutFrame.pack(anchor="w", fill="both", expand=True)
+        mainFrame.pack_forget()
+    else:
+        create_toplevel("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
 
 
 exerciseStep = 0

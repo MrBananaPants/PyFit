@@ -6,3 +6,4 @@
 - Changed location of default workout to user folder
 - Added the ability to create a new workout file
 - Added the ability to select a stored workout and view it
+- Added error message when starting an empty workout

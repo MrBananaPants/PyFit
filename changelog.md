@@ -8,3 +8,4 @@
 - Added the ability to select a stored workout and view it
 - Added error message when starting an empty workout
 - redundant `view workout` button removed
+- Small UI updates

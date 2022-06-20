@@ -187,17 +187,14 @@ viewerFrame = ctk.CTkFrame(master=mainFrame, fg_color="#757575", corner_radius=1
 viewerFrame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
 exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Select workout: ")
-exerciseLabel.place(relx=0.125, rely=0.045, anchor=ctk.CENTER)
-
-lijst = getStoredWorkouts()
-
-workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=lijst, command=comboboxSelection)
-workoutOptionMenu.place(relx=0.375, rely=0.045, anchor=ctk.CENTER)
+exerciseLabel.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
+workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=getStoredWorkouts(), command=comboboxSelection)
+workoutOptionMenu.place(relx=0.375, rely=0.055, anchor=ctk.CENTER)
 createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
-createNewWorkoutButton.place(relx=0.675, rely=0.045, anchor=ctk.CENTER)
+createNewWorkoutButton.place(relx=0.675, rely=0.055, anchor=ctk.CENTER)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
-startWorkoutButton.place(relx=0.50, rely=0.9, anchor=ctk.CENTER)
+startWorkoutButton.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
 
 exerciseLabel = ctk.CTkLabel(master=viewerFrame, text="Exercise", text_color="white")
 exerciseLabel.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)

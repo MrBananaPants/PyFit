@@ -30,6 +30,7 @@ def createNewWorkoutFile():
     workout_file = Path(os.path.join(path, filename))
     workout_file.touch(exist_ok=True)
     workoutOptionMenu.configure(values=getStoredWorkouts())
+    workoutOptionMenu.set(filename)
 
 
 def getStoredWorkouts():

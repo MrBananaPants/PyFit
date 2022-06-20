@@ -8,7 +8,7 @@ Usage:
 from setuptools import setup
 
 APP = ['PyFit.py']
-DATA_FILES = ['exercise.json']
+DATA_FILES = []
 OPTIONS = {
     'iconfile': 'media/icon.icns',
     'plist': {'CFBundleShortVersionString': '0.3.0', },

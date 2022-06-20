@@ -29,6 +29,24 @@ def createNewWorkoutFile():
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))
     workout_file.touch(exist_ok=True)
+    workoutOptionMenu.configure(values=getStoredWorkouts())
+
+
+def getStoredWorkouts():
+    foundWorkouts = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    print(foundWorkouts)
+    foundWorkoutsNotHidden = []
+    for workout in foundWorkouts:
+        if workout[0] != ".":
+            foundWorkoutsNotHidden.append(workout)
+    print(foundWorkoutsNotHidden)
+    return foundWorkoutsNotHidden
+
+
+def comboboxSelection(choice):
+    print("optionmenu dropdown clicked:", choice)
+    viewWorkoutButtonEvent()
+    # workoutOptionMenu.set(choice)
 
 
 def resetWorkoutView():
@@ -38,19 +56,21 @@ def resetWorkoutView():
 
 
 def viewWorkoutButtonEvent():
+    global lijst
     resetWorkoutView()
     print("VIEW WORKOUT")
-    file = open(os.path.join(path, "default.json"), "r")
+    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
     data = file.read()
-    source = json.loads(data)
-    exercises = source["exercises"]
-    for exercise in exercises:
-        exerciseTextData = exerciseText.cget("text") + exercise["name"] + "\n"
-        exerciseText["text"] = exerciseTextData
-        repsTextData = repsText.cget("text") + str(exercise["reps"]) + "\n"
-        repsText["text"] = repsTextData
-        setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
-        setsText["text"] = setsTextData
+    if len(data) != 0:
+        source = json.loads(data)
+        exercises = source["exercises"]
+        for exercise in exercises:
+            exerciseTextData = exerciseText.cget("text") + exercise["name"] + "\n"
+            exerciseText["text"] = exerciseTextData
+            repsTextData = repsText.cget("text") + str(exercise["reps"]) + "\n"
+            repsText["text"] = repsTextData
+            setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
+            setsText["text"] = setsTextData
 
 
 def raiseMainFrame():
@@ -152,8 +172,15 @@ actionFrame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pad
 viewerFrame = ctk.CTkFrame(master=mainFrame, fg_color="#757575", corner_radius=10)
 viewerFrame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
+exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Select workout: ")
+exerciseLabel.place(relx=0.125, rely=0.045, anchor=ctk.CENTER)
+
+lijst = getStoredWorkouts()
+
+workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=lijst, command=comboboxSelection)
+workoutOptionMenu.place(relx=0.375, rely=0.045, anchor=ctk.CENTER)
 createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
-createNewWorkoutButton.place(relx=0.2, rely=0.05, anchor=ctk.CENTER)
+createNewWorkoutButton.place(relx=0.675, rely=0.045, anchor=ctk.CENTER)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
 startWorkoutButton.place(relx=0.33, rely=0.9, anchor=ctk.CENTER)

@@ -60,7 +60,9 @@ def viewWorkout():
     print("VIEW WORKOUT")
     file = open(os.path.join(path, workoutOptionMenu.get()), "r")
     data = file.read()
-    if len(data) != 0:
+    print(data)
+    file.close()
+    if data != '{"exercises": []}' and len(data) > 0:
         source = json.loads(data)
         exercises = source["exercises"]
         for exercise in exercises:
@@ -70,8 +72,39 @@ def viewWorkout():
             repsText["text"] = repsTextData
             setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
             setsText["text"] = setsTextData
+    elif len(data) == 0:
+        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
+        file.write('{"exercises": []}')
+        file.close()
+        print("ADDED INITIAL JSON DATA TO FILE")
+        exerciseText["text"] = "(empty)"
     else:
         exerciseText["text"] = "(empty)"
+
+
+def addStepToWorkout():
+    name = nameExerciseEntry.get()
+    reps = repsEntry.get()
+    sets = setsEntry.get()
+    if name == "" or reps == "" or sets == "":
+        create_toplevel("PyFit", "One or more of the fields haven't been filled in")
+    else:
+        file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+        data = file.read()
+        file.close()
+        source = json.loads(data)
+        exercises = source["exercises"]
+        exercise = '{"name": "' + str(name) + '", "reps": "' + str(reps) + '", "sets": "' + str(sets) + '"}'
+        exercises.append(exercise)
+        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
+        file.write('{"exercises": [')
+        for index, item in enumerate(exercises):
+            file.write(str(item).replace("'", '"'))
+            if index + 1 < len(exercises):
+                file.write(",")
+        file.write(']}')
+        file.close()
+    viewWorkout()
 
 
 def create_toplevel(title, message):
@@ -192,6 +225,21 @@ workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=getStoredWorkou
 workoutOptionMenu.place(relx=0.375, rely=0.055, anchor=ctk.CENTER)
 createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
 createNewWorkoutButton.place(relx=0.675, rely=0.055, anchor=ctk.CENTER)
+
+exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Edit selected workout: ")
+exerciseLabel.place(relx=0.0125, rely=0.25, anchor=ctk.W)
+nameExerciseEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Exercise name")
+nameExerciseEntry.place(relx=0.03, rely=0.3, anchor=ctk.W)
+repsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of reps")
+repsEntry.place(relx=0.03, rely=0.36, anchor=ctk.W)
+setsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of sets")
+setsEntry.place(relx=0.03, rely=0.42, anchor=ctk.W)
+
+addStepButton = ctk.CTkButton(master=actionFrame, text="Add step", command=addStepToWorkout)
+addStepButton.place(relx=0.03, rely=0.48, anchor=ctk.W)
+
+removeLastStepButton = ctk.CTkButton(master=actionFrame, text="Remove last step", command=viewWorkout)
+removeLastStepButton.place(relx=0.325, rely=0.48, anchor=ctk.W)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
 startWorkoutButton.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)

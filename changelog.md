@@ -1,4 +1,6 @@
 # PyFit changelog
+**v0.3.0**
+
 **v0.2.0**
 - Added automatic rest screen between sets
 - Added next exercise info to rest screen

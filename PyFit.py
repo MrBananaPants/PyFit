@@ -87,8 +87,13 @@ def addStepToWorkout():
     name = nameExerciseEntry.get()
     reps = repsEntry.get()
     sets = setsEntry.get()
+    print("type reps = " + str(type(reps)))
     if name == "" or reps == "" or sets == "":
         create_toplevel("PyFit", "One or more of the fields haven't been filled in")
+    elif not reps.isnumeric():
+        create_toplevel("PyFit", "reps is not a number")
+    elif not sets.isnumeric():
+        create_toplevel("PyFit", "sets is not a number")
     else:
         file = open(os.path.join(path, workoutOptionMenu.get()), "r")
         data = file.read()
@@ -155,7 +160,7 @@ def nextStep():
     if showRestScreen:
         print("SHOW REST SCREEN")
         currentStepLabel["text"] = "Rest"
-        if exerciseSet == exercises[exerciseStep]["sets"]:
+        if exerciseSet == int(exercises[exerciseStep]["sets"]):
             if exerciseStep < len(exercises) - 1:
                 currentSetLabel["text"] = f"Next up: {exercises[exerciseStep + 1]['reps']}x {exercises[exerciseStep + 1]['name']}"
             else:
@@ -163,7 +168,7 @@ def nextStep():
                 nextStepButton.set_text("Finish")
         else:
             currentSetLabel["text"] = f"Next up: {exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
-    elif exerciseSet == exercises[exerciseStep]["sets"]:
+    elif exerciseSet == int(exercises[exerciseStep]["sets"]):
         print("+1 exercise")
         exerciseStep += 1
         exerciseSet = 1
@@ -176,7 +181,7 @@ def nextStep():
     else:
         print("+1 set")
         exerciseSet += 1
-        totalRepCount += exercises[exerciseStep]["reps"]
+        totalRepCount += int(exercises[exerciseStep]["reps"])
         currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
         currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
         print(f"exerciseStep = {exerciseStep}, exerciseSet = {exerciseSet}, exerciseRep = {totalRepCount}")

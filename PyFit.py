@@ -45,7 +45,7 @@ def getStoredWorkouts():
 
 def comboboxSelection(choice):
     print("optionmenu dropdown clicked:", choice)
-    viewWorkoutButtonEvent()
+    viewWorkout()
     # workoutOptionMenu.set(choice)
 
 
@@ -55,7 +55,7 @@ def resetWorkoutView():
     setsText["text"] = ""
 
 
-def viewWorkoutButtonEvent():
+def viewWorkout():
     resetWorkoutView()
     print("VIEW WORKOUT")
     file = open(os.path.join(path, workoutOptionMenu.get()), "r")
@@ -166,7 +166,7 @@ def returnToMain():
 
 def main():
     check_files()
-    viewWorkoutButtonEvent()
+    viewWorkout()
     app.mainloop()
 
 
@@ -197,10 +197,7 @@ createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new work
 createNewWorkoutButton.place(relx=0.675, rely=0.045, anchor=ctk.CENTER)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
-startWorkoutButton.place(relx=0.33, rely=0.9, anchor=ctk.CENTER)
-
-viewWorkoutButton = ctk.CTkButton(master=actionFrame, text="View workout", command=viewWorkoutButtonEvent)
-viewWorkoutButton.place(relx=0.66, rely=0.9, anchor=ctk.CENTER)
+startWorkoutButton.place(relx=0.50, rely=0.9, anchor=ctk.CENTER)
 
 exerciseLabel = ctk.CTkLabel(master=viewerFrame, text="Exercise", text_color="white")
 exerciseLabel.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)

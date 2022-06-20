@@ -1,10 +1,9 @@
 # PyFit
-A Python app that displays your workout routine step by step.
+A Python app that displays your workout routine step by step. It shows you the current exercise and set, and it automatically adds a rest between each set.
 
-It shows you the current exercise and set.
+On the rest screen, you can see what the next exercise will be.
 
-In the future, you'll be able to add new workout routines right inside the app.
-
+You can add your own workout routines right inside the app.
 <div align="center">
     <img src="media/Screenshot1.png" height="500" alt=""/>
 </div>
@@ -16,10 +15,6 @@ In the future, you'll be able to add new workout routines right inside the app.
 <div align="center">
     <img src="media/Screenshot3.png" height="500" alt=""/>
 </div>
-
-# How to change the default exercise
-
-Right now, there's only a default exercise that you can only change if you build the app yourself. You'll have to change the `exercise.json` file to add your own workout routine.
 
 # Requirements to build
 You need `py2app` to compile the app yourself.

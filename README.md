@@ -5,6 +5,18 @@ It shows you the current exercise and set.
 
 In the future, you'll be able to add new workout routines right inside the app.
 
+<div align="center">
+    <img src="media/Screenshot1.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot2.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot3.png" height="500" alt=""/>
+</div>
+
 # How to change the default exercise
 
 Right now, there's only a default exercise that you can only change if you build the app yourself. You'll have to change the `exercise.json` file to add your own workout routine.

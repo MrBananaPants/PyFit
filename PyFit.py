@@ -113,6 +113,27 @@ def addStepToWorkout():
     viewWorkout()
 
 
+def removeLastStep():
+    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+    data = file.read()
+    file.close()
+    source = json.loads(data)
+    exercises = source["exercises"]
+    if len(exercises) >= 1:
+        exercises.pop()
+        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
+        file.write('{"exercises": [')
+        for index, item in enumerate(exercises):
+            file.write(str(item).replace("'", '"'))
+            if index + 1 < len(exercises):
+                file.write(",")
+        file.write(']}')
+        file.close()
+    else:
+        create_toplevel("PyFit", "Workout doesn't contain any steps")
+    viewWorkout()
+
+
 def create_toplevel(title, message):
     window = ctk.CTkToplevel()
     window.geometry("400x200")
@@ -244,7 +265,7 @@ setsEntry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 addStepButton = ctk.CTkButton(master=actionFrame, text="Add step", command=addStepToWorkout)
 addStepButton.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
-removeLastStepButton = ctk.CTkButton(master=actionFrame, text="Remove last step", command=viewWorkout)
+removeLastStepButton = ctk.CTkButton(master=actionFrame, text="Remove last step", command=removeLastStep)
 removeLastStepButton.place(relx=0.325, rely=0.48, anchor=ctk.W)
 
 startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)

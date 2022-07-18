@@ -308,7 +308,7 @@ viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, p
 
 exercise_label = ctk.CTkLabel(master=action_frame, text="Select workout: ")
 exercise_label.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
-workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", values=get_stored_workouts(), command=combobox_selection)
+workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(), command=combobox_selection)
 workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
 create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
 create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)

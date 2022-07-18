@@ -306,7 +306,7 @@ repsEntry.place(relx=0.03, rely=0.36, anchor=ctk.W)
 setsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of sets")
 setsEntry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 
-addStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Add step", command=addStepToWorkout)
+addStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Edit/Add step", command=addStepToWorkout)
 addStepButton.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
 removeLastStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Remove last step", command=removeLastStep)

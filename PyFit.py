@@ -333,9 +333,6 @@ create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
 remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", text="Remove", command=remove_workout)
 remove_workout_button.place(relx=0.71, rely=0.105, anchor=ctk.CENTER)
 
-settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=80, text="Settings", command=showSettings)
-settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
-
 exercise_label = ctk.CTkLabel(master=action_frame, text="Edit selected workout: ")
 exercise_label.place(relx=0.0275, rely=0.25, anchor=ctk.W)
 name_exercise_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Exercise name")
@@ -353,8 +350,11 @@ add_step_button.place(relx=0.03, rely=0.54, anchor=ctk.W)
 remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
 remove_last_step_button.place(relx=0.325, rely=0.54, anchor=ctk.W)
 
+settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Settings", command=showSettings)
+settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
+
 start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)
-start_workout_button.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
+start_workout_button.place(relx=0.65, rely=0.925, anchor=ctk.CENTER)
 
 exercise_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="white")
 exercise_label.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)

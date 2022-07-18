@@ -28,7 +28,7 @@ def check_files():
             file.close()
     # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
     files = get_stored_workouts()
-    filename = files[0]
+    filename = files[0] + ".json"
     default_file = open(os.path.join(path, filename))
     data = default_file.read()
     default_file.close()
@@ -45,7 +45,7 @@ def create_new_workout_file():
     workout_file = Path(os.path.join(path, filename))
     workout_file.touch(exist_ok=True)
     workout_option_menu.configure(values=get_stored_workouts())
-    workout_option_menu.set(filename)
+    workout_option_menu.set(filename.replace(".json", ""))
 
 
 def get_stored_workouts():
@@ -53,7 +53,7 @@ def get_stored_workouts():
     found_workouts_not_hidden = []
     for workout in found_workouts:
         if workout[0] != ".":
-            found_workouts_not_hidden.append(workout)
+            found_workouts_not_hidden.append(workout.replace(".json", ""))
     print(found_workouts_not_hidden)
     return found_workouts_not_hidden
 
@@ -72,7 +72,7 @@ def reset_workout_view():
 def view_workout():
     reset_workout_view()
     print("VIEW WORKOUT")
-    file = open(os.path.join(path, workout_option_menu.get()), "r")
+    file = open(os.path.join(path, workout_option_menu.get()) + ".json", "r")
     data = file.read()
     print(data)
     file.close()
@@ -87,7 +87,7 @@ def view_workout():
             sets_text_data = sets_text.cget("text") + str(exercises[key][1]) + "\n"
             sets_text["text"] = sets_text_data
     elif len(data) == 0:
-        file = open(os.path.join(path, workout_option_menu.get()), "w")
+        file = open(os.path.join(path, workout_option_menu.get() + ".json"), "w")
         file.write('{}')
         file.close()
         print("ADDED INITIAL JSON DATA TO FILE")
@@ -107,12 +107,12 @@ def add_edit_workout_step():
     elif not sets.isnumeric():
         messagebox.showerror("PyFit", "sets is not a number")
     else:
-        file = open(os.path.join(path, workout_option_menu.get()), "r")
+        file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
         data = file.read()
         file.close()
         exercises = json.loads(data)
         exercises[name] = [str(reps), str(sets)]
-        with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
+        with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
     view_workout()
     clear_entries()
@@ -120,7 +120,7 @@ def add_edit_workout_step():
 
 def remove_workout_step():
     name = name_exercise_entry.get()
-    file = open(os.path.join(path, workout_option_menu.get()), "r")
+    file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     file.close()
     exercises = json.loads(data)
@@ -129,7 +129,7 @@ def remove_workout_step():
         return
     if name in exercises:
         del exercises[name]
-        with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
+        with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
     else:
         messagebox.showerror("PyFit", f'Workout doesn\'t contain "{name}" step.')
@@ -144,11 +144,11 @@ def remove_workout():
         return
     name = workout_option_menu.get()
     print(f"filename = {name}")
-    os.remove(os.path.join(path, name))
+    os.remove(os.path.join(path, name + ".json"))
     workout_option_menu.configure(values=get_stored_workouts())
     workout_option_menu.set(get_stored_workouts()[0])
     app.update()
-    messagebox.showinfo("PyFit", f'{name} has been removed')
+    messagebox.showinfo("PyFit", f'"{name}" has been removed')
 
 
 def raise_main_frame():
@@ -157,7 +157,7 @@ def raise_main_frame():
 
 
 def raise_workout_frame():
-    file = open(os.path.join(path, workout_option_menu.get()), "r")
+    file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     if len(data) != 0:
         workout_frame.pack(anchor="w", fill="both", expand=True)
@@ -178,7 +178,7 @@ def next_step():
     global exercise_set
     global total_rep_count
     global show_rest_screen
-    file = open(os.path.join(path, workout_option_menu.get()), "r")
+    file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     exercises = json.loads(data)
     keys = list(exercises)
@@ -308,7 +308,8 @@ viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, p
 
 exercise_label = ctk.CTkLabel(master=action_frame, text="Select workout: ")
 exercise_label.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
-workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(), command=combobox_selection)
+workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(),
+                                        command=combobox_selection)
 workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
 create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
 create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)

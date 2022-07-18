@@ -241,6 +241,7 @@ def reset():
     check_files()
     workout_option_menu.configure(values=get_stored_workouts())
     workout_option_menu.set(get_stored_workouts()[0])
+    app.update()
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
 

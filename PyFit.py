@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import tkinter as tk
 import urllib.request
 from pathlib import Path
@@ -214,12 +215,22 @@ def checkForUpdates():
         messagebox.showinfo("PyFit", "You already have the latest version installed")
 
 
+def reset():
+    shutil.rmtree(path)
+    check_files()
+    workoutOptionMenu.configure(values=getStoredWorkouts())
+    workoutOptionMenu.set("default.json")
+    messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
+
+
 def showSettings():
     settingsWindow = ctk.CTkToplevel()
     settingsWindow.title("Settings")
     settingsWindow.geometry("400x200")
     checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Check for updates", command=checkForUpdates)
-    checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+    checkForUpdatesButton.place(relx=0.2, rely=0.325, anchor=ctk.CENTER)
+    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Reset app", command=reset)
+    checkForUpdatesButton.place(relx=0.2, rely=0.125, anchor=ctk.CENTER)
 
 
 def returnToMain():

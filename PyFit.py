@@ -95,11 +95,11 @@ def add_edit_workout_step():
     reps = reps_entry.get()
     sets = sets_entry.get()
     if name == "" or reps == "" or sets == "":
-        create_toplevel("PyFit", "One or more of the fields haven't been filled in")
+        messagebox.showerror("PyFit", "One or more of the fields haven't been filled in")
     elif not reps.isnumeric():
-        create_toplevel("PyFit", "reps is not a number")
+        messagebox.showerror("PyFit", "reps is not a number")
     elif not sets.isnumeric():
-        create_toplevel("PyFit", "sets is not a number")
+        messagebox.showerror("PyFit", "sets is not a number")
     else:
         file = open(os.path.join(path, workout_option_menu.get()), "r")
         data = file.read()
@@ -119,24 +119,16 @@ def remove_workout_step():
     file.close()
     exercises = json.loads(data)
     if name == "":
-        create_toplevel("PyFit", "Name field is empty. Please enter step name you want to remove.")
+        messagebox.showerror("PyFit", "Name field is empty. Please enter step name you want to remove.")
         return
     if name in exercises:
         del exercises[name]
         with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
             json.dump(exercises, outfile)
     else:
-        create_toplevel("PyFit", f'Workout doesn\'t contain "{name}" step')
+        messagebox.showerror("PyFit", f'Workout doesn\'t contain "{name}" step.')
     view_workout()
     clear_entries()
-
-
-def create_toplevel(title, message):
-    window = ctk.CTkToplevel()
-    window.geometry("400x200")
-    top_level = ctk.CTkLabel(window, text=message, text_font=('Segoe UI', 15))
-    top_level.pack(side="top", fill="both", expand=True, padx=10, pady=10)
-    window.title(title)
 
 
 def raise_main_frame():
@@ -151,7 +143,7 @@ def raise_workout_frame():
         workout_frame.pack(anchor="w", fill="both", expand=True)
         main_frame.pack_forget()
     else:
-        create_toplevel("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
+        messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one")
 
 
 exercise_step = 0

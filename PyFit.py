@@ -231,10 +231,10 @@ def checkForUpdates():
 
 
 def showSettings():
-    window = ctk.CTkToplevel()
-    window.title("Settings")
-    window.geometry("400x200")
-    checkForUpdatesButton = ctk.CTkButton(master=window, text="Check for updates", command=checkForUpdates)
+    settingsWindow = ctk.CTkToplevel()
+    settingsWindow.title("Settings")
+    settingsWindow.geometry("400x200")
+    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Check for updates", command=checkForUpdates)
     checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
 

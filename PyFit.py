@@ -113,16 +113,20 @@ def add_edit_workout_step():
 
 
 def remove_workout_step():
+    name = name_exercise_entry.get()
     file = open(os.path.join(path, workout_option_menu.get()), "r")
     data = file.read()
     file.close()
     exercises = json.loads(data)
-    if len(exercises) >= 1:
-        del exercises[list(exercises)[-1]]
+    if name == "":
+        create_toplevel("PyFit", "Name field is empty. Please enter step name you want to remove.")
+        return
+    if name in exercises:
+        del exercises[name]
         with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
             json.dump(exercises, outfile)
     else:
-        create_toplevel("PyFit", "Workout doesn't contain any steps")
+        create_toplevel("PyFit", f'Workout doesn\'t contain "{name}" step')
     view_workout()
     clear_entries()
 
@@ -312,7 +316,7 @@ sets_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 add_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit/Add step", command=add_edit_workout_step)
 add_step_button.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
-remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove last step", command=remove_workout_step)
+remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
 remove_last_step_button.place(relx=0.325, rely=0.48, anchor=ctk.W)
 
 start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)

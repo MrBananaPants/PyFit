@@ -24,7 +24,7 @@ def check_files():
         if os.path.getsize(os.path.join(path, "default.json")) == 0:
             file = open(os.path.join(path, "default.json"), "a")
             file.write(
-                '{ "Push-ups": [ 10, 5 ], "Leg Raises": [ 30, 1 ], "Hip raises": [ 30, 1 ], "Toe touches": [ 30, 1 ], "Flutter kicks": [ 30, 1 ], "Sit-ups": [ 30, 1 ], "Pull-ups": [ 10, 1 ], "Chin-ups": [ 10, 1 ], "Biceps": [ 10, 1 ], "Forward fly": [ 10, 1 ], "Side fly": [ 10, 1 ], "Forearms": [ 50, 2 ] }')
+                '{ "Push-ups": [ "10", "5", "" ], "Leg Raises": [ "30", "1", "" ], "Hip raises": [ "30", "1", "" ], "Toe touches": [ "30", "1", "" ], "Flutter kicks": [ "30", "1", "" ], "Sit-ups": [ "30", "1", "" ], "Pull-ups": [ "10", "1", "" ], "Chin-ups": [ "10", "1", "" ], "Biceps": [ "10", "1", "" ], "Forward fly": [ "10", "1", "" ], "Side fly": [ "10", "1", "" ], "Forearms": [ "50", "2", "" ] }')
             file.close()
     # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
     files = get_stored_workouts()
@@ -67,6 +67,7 @@ def reset_workout_view():
     exercise_text["text"] = ""
     reps_text["text"] = ""
     sets_text["text"] = ""
+    weight_text["text"] = ""
 
 
 def view_workout():
@@ -80,12 +81,11 @@ def view_workout():
         exercises = json.loads(data)
         keys = list(exercises)
         for key in keys:
-            exercise_text_data = exercise_text.cget("text") + key + "\n"
-            exercise_text["text"] = exercise_text_data
-            reps_text_data = reps_text.cget("text") + str(exercises[key][0]) + "\n"
-            reps_text["text"] = reps_text_data
-            sets_text_data = sets_text.cget("text") + str(exercises[key][1]) + "\n"
-            sets_text["text"] = sets_text_data
+            exercise_text["text"] = exercise_text.cget("text") + key + "\n"
+            reps_text["text"] = reps_text.cget("text") + str(exercises[key][0]) + "\n"
+            sets_text["text"] = sets_text.cget("text") + str(exercises[key][1]) + "\n"
+            weight_text["text"] = weight_text.cget("text") + str(exercises[key][2]) + "\n"
+
     elif len(data) == 0:
         file = open(os.path.join(path, workout_option_menu.get() + ".json"), "w")
         file.write('{}')
@@ -100,6 +100,7 @@ def add_edit_workout_step():
     name = name_exercise_entry.get()
     reps = reps_entry.get()
     sets = sets_entry.get()
+    weight = weight_entry.get()
     if name == "" or reps == "" or sets == "":
         messagebox.showerror("PyFit", "One or more of the fields haven't been filled in")
     elif not reps.isnumeric():
@@ -111,7 +112,7 @@ def add_edit_workout_step():
         data = file.read()
         file.close()
         exercises = json.loads(data)
-        exercises[name] = [str(reps), str(sets)]
+        exercises[name] = [str(reps), str(sets), str(weight)]
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
     view_workout()
@@ -185,25 +186,38 @@ def next_step():
 
     if total_rep_count == 0:
         print("first exercise")
-        current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        if exercises[keys[exercise_step]][2] == "":
+            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        else:
+            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
         current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
     if show_rest_screen:
         print("SHOW REST SCREEN")
         current_step_label["text"] = "Rest"
         if exercise_set == int(exercises[keys[exercise_step]][1]):
             if exercise_step < len(exercises) - 1:
-                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]}"
+                if exercises[keys[exercise_step + 1]][2] == "":
+                    current_set_label["text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]}"
+                else:
+                    current_set_label[
+                        "text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]} ({exercises[keys[exercise_step + 1]][2]}kg)"
             else:
                 current_set_label["text"] = f'Click "Finish" to go back to main menu'
                 next_step_button.set_text("Finish")
         else:
-            current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+            if exercises[keys[exercise_step]][2] == "":
+                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+            else:
+                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
     elif exercise_set == int(exercises[keys[exercise_step]][1]):
         print("+1 exercise")
         exercise_step += 1
         exercise_set = 1
         if exercise_step < len(exercises):
-            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+            if exercises[keys[exercise_step]][2] == "":
+                current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+            else:
+                current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
             current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
         else:
             print("END OF EXERCISE")
@@ -212,7 +226,10 @@ def next_step():
         print("+1 set")
         exercise_set += 1
         total_rep_count += int(exercises[keys[exercise_step]][0])
-        current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        if exercises[keys[exercise_step]][2] == "":
+            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        else:
+            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
         current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
         print(f"exerciseStep = {exercise_step}, exerciseSet = {exercise_set}, exerciseRep = {total_rep_count}")
     show_rest_screen = not show_rest_screen
@@ -320,19 +337,21 @@ settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=8
 settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
 
 exercise_label = ctk.CTkLabel(master=action_frame, text="Edit selected workout: ")
-exercise_label.place(relx=0.0125, rely=0.25, anchor=ctk.W)
-name_exercise_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Exercise name")
+exercise_label.place(relx=0.0275, rely=0.25, anchor=ctk.W)
+name_exercise_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Exercise name")
 name_exercise_entry.place(relx=0.03, rely=0.3, anchor=ctk.W)
-reps_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Amount of reps")
+reps_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Amount of reps")
 reps_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
-sets_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Amount of sets")
+sets_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Amount of sets")
 sets_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
+weight_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Weight (leave blank for no weight)")
+weight_entry.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
 add_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit/Add step", command=add_edit_workout_step)
-add_step_button.place(relx=0.03, rely=0.48, anchor=ctk.W)
+add_step_button.place(relx=0.03, rely=0.54, anchor=ctk.W)
 
 remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
-remove_last_step_button.place(relx=0.325, rely=0.48, anchor=ctk.W)
+remove_last_step_button.place(relx=0.325, rely=0.54, anchor=ctk.W)
 
 start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)
 start_workout_button.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
@@ -341,19 +360,25 @@ exercise_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="
 exercise_label.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)
 
 reps_label = ctk.CTkLabel(master=viewer_frame, text="Reps", text_color="white")
-reps_label.place(relx=0.50, rely=0.025, anchor=ctk.CENTER)
+reps_label.place(relx=0.45, rely=0.025, anchor=ctk.CENTER)
 
 sets_label = ctk.CTkLabel(master=viewer_frame, text="Sets", text_color="white")
-sets_label.place(relx=0.80, rely=0.025, anchor=ctk.CENTER)
+sets_label.place(relx=0.65, rely=0.025, anchor=ctk.CENTER)
+
+weight_label = ctk.CTkLabel(master=viewer_frame, text="Weight (kg)", text_color="white")
+weight_label.place(relx=0.85, rely=0.025, anchor=ctk.CENTER)
 
 exercise_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
 exercise_text.place(relx=0.15, rely=0.075, anchor=ctk.N)
 
 reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
-reps_text.place(relx=0.50, rely=0.075, anchor=tk.N)
+reps_text.place(relx=0.45, rely=0.075, anchor=tk.N)
 
 sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
-sets_text.place(relx=0.80, rely=0.075, anchor=ctk.N)
+sets_text.place(relx=0.65, rely=0.075, anchor=ctk.N)
+
+weight_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 
 # workoutFrame view
 workout_frame = ctk.CTkFrame(app, fg_color="#212121")

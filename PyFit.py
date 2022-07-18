@@ -228,9 +228,13 @@ def showSettings():
     settingsWindow.title("Settings")
     settingsWindow.geometry("400x200")
     checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Check for updates", command=checkForUpdates)
-    checkForUpdatesButton.place(relx=0.2, rely=0.325, anchor=ctk.CENTER)
+    checkForUpdatesButton.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+
     checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Reset app", command=reset)
-    checkForUpdatesButton.place(relx=0.2, rely=0.125, anchor=ctk.CENTER)
+    checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+
+    aboutLabel = ctk.CTkLabel(master=settingsWindow, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
+    aboutLabel.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
 
 def returnToMain():

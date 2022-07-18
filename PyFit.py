@@ -227,10 +227,9 @@ def showSettings():
     settingsWindow = ctk.CTkToplevel()
     settingsWindow.title("Settings")
     settingsWindow.geometry("400x200")
-    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Check for updates", command=checkForUpdates)
+    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, fg_color="#3C99DC", text="Check for updates", command=checkForUpdates)
     checkForUpdatesButton.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
-
-    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, text="Reset app", command=reset)
+    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, fg_color="#3C99DC", text="Reset app", command=reset)
     checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
     aboutLabel = ctk.CTkLabel(master=settingsWindow, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
@@ -277,12 +276,12 @@ viewerFrame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pa
 
 exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Select workout: ")
 exerciseLabel.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
-workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=getStoredWorkouts(), command=comboboxSelection)
+workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, fg_color="#3C99DC", values=getStoredWorkouts(), command=comboboxSelection)
 workoutOptionMenu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
-createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
+createNewWorkoutButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Create new workout", command=createNewWorkoutFile)
 createNewWorkoutButton.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
 
-settingsButton = ctk.CTkButton(master=actionFrame, width=80, text="Settings", command=showSettings)
+settingsButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", width=80, text="Settings", command=showSettings)
 settingsButton.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
 
 exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Edit selected workout: ")
@@ -294,13 +293,13 @@ repsEntry.place(relx=0.03, rely=0.36, anchor=ctk.W)
 setsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of sets")
 setsEntry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 
-addStepButton = ctk.CTkButton(master=actionFrame, text="Add step", command=addStepToWorkout)
+addStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Add step", command=addStepToWorkout)
 addStepButton.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
-removeLastStepButton = ctk.CTkButton(master=actionFrame, text="Remove last step", command=removeLastStep)
+removeLastStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Remove last step", command=removeLastStep)
 removeLastStepButton.place(relx=0.325, rely=0.48, anchor=ctk.W)
 
-startWorkoutButton = ctk.CTkButton(master=actionFrame, text="Start workout", command=raiseWorkoutFrame)
+startWorkoutButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Start workout", command=raiseWorkoutFrame)
 startWorkoutButton.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
 
 exerciseLabel = ctk.CTkLabel(master=viewerFrame, text="Exercise", text_color="white")

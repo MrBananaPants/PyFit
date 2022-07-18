@@ -371,13 +371,13 @@ weight_label.place(relx=0.85, rely=0.025, anchor=ctk.CENTER)
 exercise_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
 exercise_text.place(relx=0.15, rely=0.075, anchor=ctk.N)
 
-reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
 reps_text.place(relx=0.45, rely=0.075, anchor=tk.N)
 
-sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
 sets_text.place(relx=0.65, rely=0.075, anchor=ctk.N)
 
-weight_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+weight_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
 weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 
 # workoutFrame view

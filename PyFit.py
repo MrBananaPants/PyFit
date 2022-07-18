@@ -115,6 +115,7 @@ def addStepToWorkout():
         with open(os.path.join(path, workoutOptionMenu.get()), "w") as outfile:
             json.dump(exercises, outfile)
     viewWorkout()
+    clear_entries()
 
 
 def removeLastStep():
@@ -129,6 +130,7 @@ def removeLastStep():
     else:
         create_toplevel("PyFit", "Workout doesn't contain any steps")
     viewWorkout()
+    clear_entries()
 
 
 def create_toplevel(title, message):
@@ -225,6 +227,7 @@ def checkForUpdates():
 
 
 def reset():
+    clear_entries()
     remove_files()
     check_files()
     workoutOptionMenu.configure(values=getStoredWorkouts())
@@ -247,6 +250,12 @@ def showSettings():
 
     aboutLabel = ctk.CTkLabel(master=settingsWindow, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
     aboutLabel.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
+
+
+def clear_entries():
+    nameExerciseEntry.delete(0, 'end')
+    repsEntry.delete(0, 'end')
+    setsEntry.delete(0, 'end')
 
 
 def returnToMain():

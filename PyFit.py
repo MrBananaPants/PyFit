@@ -33,7 +33,7 @@ def check_files():
     data = default_file.read()
     default_file.close()
     exercises = json.loads(data)
-    if list(exercises)[0] == "exercises":
+    if "exercises" in exercises:
         remove_files()
         check_files()
 
@@ -146,7 +146,7 @@ def remove_workout():
     print(f"filename = {name}")
     os.remove(os.path.join(path, name))
     workout_option_menu.configure(values=get_stored_workouts())
-    workout_option_menu.set("default.json")
+    workout_option_menu.set(get_stored_workouts()[0])
     app.update()
     messagebox.showinfo("PyFit", f'{name} has been removed')
 
@@ -241,7 +241,7 @@ def reset():
     remove_files()
     check_files()
     workout_option_menu.configure(values=get_stored_workouts())
-    workout_option_menu.set("default.json")
+    workout_option_menu.set(get_stored_workouts()[0])
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
 

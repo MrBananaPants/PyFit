@@ -36,43 +36,37 @@ def check_files():
             check_files()
 
 
-def createNewWorkoutFile():
+def create_new_workout_file():
     dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
     filename = str(dialog.get_input()) + ".json"
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))
     workout_file.touch(exist_ok=True)
-    workoutOptionMenu.configure(values=getStoredWorkouts())
-    workoutOptionMenu.set(filename)
+    workout_option_menu.configure(values=get_stored_workouts())
+    workout_option_menu.set(filename)
 
 
-def getStoredWorkouts():
-    foundWorkouts = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    print(foundWorkouts)
-    foundWorkoutsNotHidden = []
-    for workout in foundWorkouts:
+def get_stored_workouts():
+    found_workouts = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    print(found_workouts)
+    found_workouts_not_hidden = []
+    for workout in found_workouts:
         if workout[0] != ".":
-            foundWorkoutsNotHidden.append(workout)
-    print(foundWorkoutsNotHidden)
-    return foundWorkoutsNotHidden
+            found_workouts_not_hidden.append(workout)
+    print(found_workouts_not_hidden)
+    return found_workouts_not_hidden
 
 
-def comboboxSelection(choice):
-    print("optionmenu dropdown clicked:", choice)
-    viewWorkout()
-    # workoutOptionMenu.set(choice)
+def reset_workout_view():
+    exercise_text["text"] = ""
+    reps_text["text"] = ""
+    sets_text["text"] = ""
 
 
-def resetWorkoutView():
-    exerciseText["text"] = ""
-    repsText["text"] = ""
-    setsText["text"] = ""
-
-
-def viewWorkout():
-    resetWorkoutView()
+def view_workout():
+    reset_workout_view()
     print("VIEW WORKOUT")
-    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+    file = open(os.path.join(path, workout_option_menu.get()), "r")
     data = file.read()
     print(data)
     file.close()
@@ -80,26 +74,26 @@ def viewWorkout():
         exercises = json.loads(data)
         keys = list(exercises)
         for key in keys:
-            exerciseTextData = exerciseText.cget("text") + key + "\n"
-            exerciseText["text"] = exerciseTextData
-            repsTextData = repsText.cget("text") + str(exercises[key][0]) + "\n"
-            repsText["text"] = repsTextData
-            setsTextData = setsText.cget("text") + str(exercises[key][1]) + "\n"
-            setsText["text"] = setsTextData
+            exercise_text_data = exercise_text.cget("text") + key + "\n"
+            exercise_text["text"] = exercise_text_data
+            reps_text_data = reps_text.cget("text") + str(exercises[key][0]) + "\n"
+            reps_text["text"] = reps_text_data
+            sets_text_data = sets_text.cget("text") + str(exercises[key][1]) + "\n"
+            sets_text["text"] = sets_text_data
     elif len(data) == 0:
-        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
+        file = open(os.path.join(path, workout_option_menu.get()), "w")
         file.write('{}')
         file.close()
         print("ADDED INITIAL JSON DATA TO FILE")
-        exerciseText["text"] = "(empty)"
+        exercise_text["text"] = "(empty)"
     else:
-        exerciseText["text"] = "(empty)"
+        exercise_text["text"] = "(empty)"
 
 
-def addStepToWorkout():
-    name = nameExerciseEntry.get()
-    reps = repsEntry.get()
-    sets = setsEntry.get()
+def add_edit_workout_step():
+    name = name_exercise_entry.get()
+    reps = reps_entry.get()
+    sets = sets_entry.get()
     if name == "" or reps == "" or sets == "":
         create_toplevel("PyFit", "One or more of the fields haven't been filled in")
     elif not reps.isnumeric():
@@ -107,108 +101,108 @@ def addStepToWorkout():
     elif not sets.isnumeric():
         create_toplevel("PyFit", "sets is not a number")
     else:
-        file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+        file = open(os.path.join(path, workout_option_menu.get()), "r")
         data = file.read()
         file.close()
         exercises = json.loads(data)
         exercises[name] = [str(reps), str(sets)]
-        with open(os.path.join(path, workoutOptionMenu.get()), "w") as outfile:
+        with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
             json.dump(exercises, outfile)
-    viewWorkout()
+    view_workout()
     clear_entries()
 
 
-def removeLastStep():
-    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+def remove_workout_step():
+    file = open(os.path.join(path, workout_option_menu.get()), "r")
     data = file.read()
     file.close()
     exercises = json.loads(data)
     if len(exercises) >= 1:
         del exercises[list(exercises)[-1]]
-        with open(os.path.join(path, workoutOptionMenu.get()), "w") as outfile:
+        with open(os.path.join(path, workout_option_menu.get()), "w") as outfile:
             json.dump(exercises, outfile)
     else:
         create_toplevel("PyFit", "Workout doesn't contain any steps")
-    viewWorkout()
+    view_workout()
     clear_entries()
 
 
 def create_toplevel(title, message):
     window = ctk.CTkToplevel()
     window.geometry("400x200")
-    finishedwind = ctk.CTkLabel(window, text=message, text_font=('Segoe UI', 15))
-    finishedwind.pack(side="top", fill="both", expand=True, padx=10, pady=10)
+    top_level = ctk.CTkLabel(window, text=message, text_font=('Segoe UI', 15))
+    top_level.pack(side="top", fill="both", expand=True, padx=10, pady=10)
     window.title(title)
 
 
-def raiseMainFrame():
-    mainFrame.pack(anchor="w", fill="both", expand=True)
-    workoutFrame.pack_forget()
+def raise_main_frame():
+    main_frame.pack(anchor="w", fill="both", expand=True)
+    workout_frame.pack_forget()
 
 
-def raiseWorkoutFrame():
-    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+def raise_workout_frame():
+    file = open(os.path.join(path, workout_option_menu.get()), "r")
     data = file.read()
     if len(data) != 0:
-        workoutFrame.pack(anchor="w", fill="both", expand=True)
-        mainFrame.pack_forget()
+        workout_frame.pack(anchor="w", fill="both", expand=True)
+        main_frame.pack_forget()
     else:
         create_toplevel("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
 
 
-exerciseStep = 0
-exerciseSet = 0
-totalRepCount = 0
-showRestScreen = False
+exercise_step = 0
+exercise_set = 0
+total_rep_count = 0
+show_rest_screen = False
 
 
-def nextStep():
-    nextStepButton.set_text("Next step")
-    global exerciseStep
-    global exerciseSet
-    global totalRepCount
-    global showRestScreen
-    file = open(os.path.join(path, workoutOptionMenu.get()), "r")
+def next_step():
+    next_step_button.set_text("Next step")
+    global exercise_step
+    global exercise_set
+    global total_rep_count
+    global show_rest_screen
+    file = open(os.path.join(path, workout_option_menu.get()), "r")
     data = file.read()
     exercises = json.loads(data)
     keys = list(exercises)
 
-    if totalRepCount == 0:
+    if total_rep_count == 0:
         print("first exercise")
-        currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
-        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
-    if showRestScreen:
+        current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
+    if show_rest_screen:
         print("SHOW REST SCREEN")
-        currentStepLabel["text"] = "Rest"
-        if exerciseSet == int(exercises[keys[exerciseStep]][1]):
-            if exerciseStep < len(exercises) - 1:
-                currentSetLabel["text"] = f"Next up: {exercises[keys[exerciseStep + 1]][0]}x {keys[exerciseStep + 1]}"
+        current_step_label["text"] = "Rest"
+        if exercise_set == int(exercises[keys[exercise_step]][1]):
+            if exercise_step < len(exercises) - 1:
+                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]}"
             else:
-                currentSetLabel["text"] = f'Click "Finish" to go back to main menu'
-                nextStepButton.set_text("Finish")
+                current_set_label["text"] = f'Click "Finish" to go back to main menu'
+                next_step_button.set_text("Finish")
         else:
-            currentSetLabel["text"] = f"Next up: {exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
-    elif exerciseSet == int(exercises[keys[exerciseStep]][1]):
+            current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+    elif exercise_set == int(exercises[keys[exercise_step]][1]):
         print("+1 exercise")
-        exerciseStep += 1
-        exerciseSet = 1
-        if exerciseStep < len(exercises):
-            currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
-            currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
+        exercise_step += 1
+        exercise_set = 1
+        if exercise_step < len(exercises):
+            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+            current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
         else:
             print("END OF EXERCISE")
-            returnToMain()
+            return_to_main()
     else:
         print("+1 set")
-        exerciseSet += 1
-        totalRepCount += int(exercises[keys[exerciseStep]][0])
-        currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
-        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
-        print(f"exerciseStep = {exerciseStep}, exerciseSet = {exerciseSet}, exerciseRep = {totalRepCount}")
-    showRestScreen = not showRestScreen
+        exercise_set += 1
+        total_rep_count += int(exercises[keys[exercise_step]][0])
+        current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
+        current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
+        print(f"exerciseStep = {exercise_step}, exerciseSet = {exercise_set}, exerciseRep = {total_rep_count}")
+    show_rest_screen = not show_rest_screen
 
 
-def checkForUpdates():
+def check_for_updates():
     print("CHECKING FOR UPDATES")
     tag = os.popen('curl -sL https://api.github.com/repos/MrBananaPants/PyFit/releases/latest').read()
     tag = json.loads(tag)
@@ -230,8 +224,8 @@ def reset():
     clear_entries()
     remove_files()
     check_files()
-    workoutOptionMenu.configure(values=getStoredWorkouts())
-    workoutOptionMenu.set("default.json")
+    workout_option_menu.configure(values=get_stored_workouts())
+    workout_option_menu.set("default.json")
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
 
@@ -240,41 +234,41 @@ def remove_files():
 
 
 def showSettings():
-    settingsWindow = ctk.CTkToplevel()
-    settingsWindow.title("Settings")
-    settingsWindow.geometry("400x200")
-    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, fg_color="#3C99DC", text="Check for updates", command=checkForUpdates)
-    checkForUpdatesButton.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
-    checkForUpdatesButton = ctk.CTkButton(master=settingsWindow, fg_color="#3C99DC", text="Reset app", command=reset)
-    checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+    settings_window = ctk.CTkToplevel()
+    settings_window.title("Settings")
+    settings_window.geometry("400x200")
+    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
+    check_for_updates_button.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
+    check_for_updates_button.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
-    aboutLabel = ctk.CTkLabel(master=settingsWindow, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
-    aboutLabel.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
+    about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
+    about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
 
 def clear_entries():
-    nameExerciseEntry.delete(0, 'end')
-    repsEntry.delete(0, 'end')
-    setsEntry.delete(0, 'end')
+    name_exercise_entry.delete(0, 'end')
+    reps_entry.delete(0, 'end')
+    sets_entry.delete(0, 'end')
 
 
-def returnToMain():
-    global exerciseStep
-    global exerciseSet
-    global totalRepCount
-    global showRestScreen
-    exerciseStep = 0
-    exerciseSet = 0
-    totalRepCount = 0
-    showRestScreen = False
-    raiseMainFrame()
-    currentStepLabel["text"] = "Press START to begin"
-    currentSetLabel["text"] = ""
-    nextStepButton.set_text("START")
+def return_to_main():
+    global exercise_step
+    global exercise_set
+    global total_rep_count
+    global show_rest_screen
+    exercise_step = 0
+    exercise_set = 0
+    total_rep_count = 0
+    show_rest_screen = False
+    raise_main_frame()
+    current_step_label["text"] = "Press START to begin"
+    current_set_label["text"] = ""
+    next_step_button.set_text("START")
 
 
 def main():
-    viewWorkout()
+    view_workout()
     app.mainloop()
 
 
@@ -287,74 +281,74 @@ app.title("PyFit")
 app.configure(bg="#212121")
 
 # mainFrame view
-mainFrame = ctk.CTkFrame(app, fg_color="#212121")
-mainFrame.pack(anchor="w", fill="both", expand=True)
+main_frame = ctk.CTkFrame(app, fg_color="#212121")
+main_frame.pack(anchor="w", fill="both", expand=True)
 
-actionFrame = ctk.CTkFrame(master=mainFrame, fg_color="#E0E0E0", corner_radius=10)
-actionFrame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pady=20)
+action_frame = ctk.CTkFrame(master=main_frame, fg_color="#E0E0E0", corner_radius=10)
+action_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pady=20)
 
-viewerFrame = ctk.CTkFrame(master=mainFrame, fg_color="#757575", corner_radius=10)
-viewerFrame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
+viewer_frame = ctk.CTkFrame(master=main_frame, fg_color="#757575", corner_radius=10)
+viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
-exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Select workout: ")
-exerciseLabel.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
-workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, fg_color="#3C99DC", values=getStoredWorkouts(), command=comboboxSelection)
-workoutOptionMenu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
-createNewWorkoutButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Create new workout", command=createNewWorkoutFile)
-createNewWorkoutButton.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
+exercise_label = ctk.CTkLabel(master=action_frame, text="Select workout: ")
+exercise_label.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
+workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", values=get_stored_workouts(), command=view_workout)
+workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
+create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
+create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
 
-settingsButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", width=80, text="Settings", command=showSettings)
-settingsButton.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
+settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=80, text="Settings", command=showSettings)
+settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
 
-exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Edit selected workout: ")
-exerciseLabel.place(relx=0.0125, rely=0.25, anchor=ctk.W)
-nameExerciseEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Exercise name")
-nameExerciseEntry.place(relx=0.03, rely=0.3, anchor=ctk.W)
-repsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of reps")
-repsEntry.place(relx=0.03, rely=0.36, anchor=ctk.W)
-setsEntry = ctk.CTkEntry(master=actionFrame, placeholder_text="Amount of sets")
-setsEntry.place(relx=0.03, rely=0.42, anchor=ctk.W)
+exercise_label = ctk.CTkLabel(master=action_frame, text="Edit selected workout: ")
+exercise_label.place(relx=0.0125, rely=0.25, anchor=ctk.W)
+name_exercise_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Exercise name")
+name_exercise_entry.place(relx=0.03, rely=0.3, anchor=ctk.W)
+reps_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Amount of reps")
+reps_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
+sets_entry = ctk.CTkEntry(master=action_frame, placeholder_text="Amount of sets")
+sets_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 
-addStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Edit/Add step", command=addStepToWorkout)
-addStepButton.place(relx=0.03, rely=0.48, anchor=ctk.W)
+add_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit/Add step", command=add_edit_workout_step)
+add_step_button.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
-removeLastStepButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Remove last step", command=removeLastStep)
-removeLastStepButton.place(relx=0.325, rely=0.48, anchor=ctk.W)
+remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove last step", command=remove_workout_step)
+remove_last_step_button.place(relx=0.325, rely=0.48, anchor=ctk.W)
 
-startWorkoutButton = ctk.CTkButton(master=actionFrame, fg_color="#3C99DC", text="Start workout", command=raiseWorkoutFrame)
-startWorkoutButton.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
+start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)
+start_workout_button.place(relx=0.50, rely=0.925, anchor=ctk.CENTER)
 
-exerciseLabel = ctk.CTkLabel(master=viewerFrame, text="Exercise", text_color="white")
-exerciseLabel.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)
+exercise_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="white")
+exercise_label.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)
 
-repsLabel = ctk.CTkLabel(master=viewerFrame, text="Reps", text_color="white")
-repsLabel.place(relx=0.50, rely=0.025, anchor=ctk.CENTER)
+reps_label = ctk.CTkLabel(master=viewer_frame, text="Reps", text_color="white")
+reps_label.place(relx=0.50, rely=0.025, anchor=ctk.CENTER)
 
-setsLabel = ctk.CTkLabel(master=viewerFrame, text="Sets", text_color="white")
-setsLabel.place(relx=0.80, rely=0.025, anchor=ctk.CENTER)
+sets_label = ctk.CTkLabel(master=viewer_frame, text="Sets", text_color="white")
+sets_label.place(relx=0.80, rely=0.025, anchor=ctk.CENTER)
 
-exerciseText = tk.Label(master=viewerFrame, text="", fg="white", bg="#757575", justify="left")
-exerciseText.place(relx=0.15, rely=0.075, anchor=ctk.N)
+exercise_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+exercise_text.place(relx=0.15, rely=0.075, anchor=ctk.N)
 
-repsText = tk.Label(master=viewerFrame, text="", fg="white", bg="#757575", justify="left")
-repsText.place(relx=0.50, rely=0.075, anchor=tk.N)
+reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+reps_text.place(relx=0.50, rely=0.075, anchor=tk.N)
 
-setsText = tk.Label(master=viewerFrame, text="", fg="white", bg="#757575", justify="left")
-setsText.place(relx=0.80, rely=0.075, anchor=ctk.N)
+sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+sets_text.place(relx=0.80, rely=0.075, anchor=ctk.N)
 
 # workoutFrame view
-workoutFrame = ctk.CTkFrame(app, fg_color="#212121")
+workout_frame = ctk.CTkFrame(app, fg_color="#212121")
 
-currentStepLabel = tk.Label(workoutFrame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
-currentStepLabel.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
-currentSetLabel = tk.Label(workoutFrame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
-currentSetLabel.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
+current_step_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
+current_step_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
+current_set_label = tk.Label(workout_frame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
+current_set_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 
-nextStepButton = ctk.CTkButton(master=workoutFrame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=nextStep)
-nextStepButton.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
+next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=next_step)
+next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
-returnButton = ctk.CTkButton(master=workoutFrame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=returnToMain)
-returnButton.place(relx=0.05, rely=0.05, anchor=ctk.CENTER)
+return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=return_to_main)
+return_button.place(relx=0.05, rely=0.05, anchor=ctk.CENTER)
 
 if __name__ == "__main__":
     main()

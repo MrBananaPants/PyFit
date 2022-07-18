@@ -25,6 +25,15 @@ def check_files():
         file.write(
             '{ "Push-ups": [ 10, 5 ], "Leg Raises": [ 30, 1 ], "Hip raises": [ 30, 1 ], "Toe touches": [ 30, 1 ], "Flutter kicks": [ 30, 1 ], "Sit-ups": [ 30, 1 ], "Pull-ups": [ 10, 1 ], "Chin-ups": [ 10, 1 ], "Biceps": [ 10, 1 ], "Forward fly": [ 10, 1 ], "Side fly": [ 10, 1 ], "Forearms": [ 50, 2 ] }')
         file.close()
+    else:
+        # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
+        default_file = open(os.path.join(path, "default.json"))
+        data = default_file.read()
+        default_file.close()
+        exercises = json.loads(data)
+        if list(exercises)[0] == "exercises":
+            remove_files()
+            check_files()
 
 
 def createNewWorkoutFile():
@@ -216,11 +225,14 @@ def checkForUpdates():
 
 
 def reset():
-    shutil.rmtree(path)
+    remove_files()
     check_files()
     workoutOptionMenu.configure(values=getStoredWorkouts())
     workoutOptionMenu.set("default.json")
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
+
+def remove_files():
+    shutil.rmtree(path)
 
 
 def showSettings():

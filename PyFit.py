@@ -22,7 +22,7 @@ def check_files():
     if os.path.getsize(os.path.join(path, "default.json")) == 0:
         file = open(os.path.join(path, "default.json"), "a")
         file.write(
-            '{ "exercises": [ { "name": "Push-ups", "reps": 10, "sets": 5 }, { "name": "Leg raises", "reps": 30, "sets": 1 }, { "name": "Hip raises", "reps": 30, "sets": 1 }, { "name": "Toe touches", "reps": 30, "sets": 1 }, { "name": "Flutter kicks", "reps": 30, "sets": 1 }, { "name": "Sit-ups", "reps": 30, "sets": 1 }, { "name": "Pull-ups", "reps": 10, "sets": 1 }, { "name": "Chin-ups", "reps": 10, "sets": 1 }, { "name": "Biceps", "reps": 10, "sets": 1 }, { "name": "Forward fly", "reps": 10, "sets": 1 }, { "name": "Side fly", "reps": 10, "sets": 1 }, { "name": "Forearms", "reps": 50, "sets": 2 } ] }')
+            '{ "Push-ups": [ 10, 5 ], "Leg Raises": [ 30, 1 ], "Hip raises": [ 30, 1 ], "Toe touches": [ 30, 1 ], "Flutter kicks": [ 30, 1 ], "Sit-ups": [ 30, 1 ], "Pull-ups": [ 10, 1 ], "Chin-ups": [ 10, 1 ], "Biceps": [ 10, 1 ], "Forward fly": [ 10, 1 ], "Side fly": [ 10, 1 ], "Forearms": [ 50, 2 ] }')
         file.close()
 
 
@@ -66,19 +66,19 @@ def viewWorkout():
     data = file.read()
     print(data)
     file.close()
-    if data != '{"exercises": []}' and len(data) > 0:
-        source = json.loads(data)
-        exercises = source["exercises"]
-        for exercise in exercises:
-            exerciseTextData = exerciseText.cget("text") + exercise["name"] + "\n"
+    if data != '{}' and len(data) > 0:
+        exercises = json.loads(data)
+        keys = list(exercises)
+        for key in keys:
+            exerciseTextData = exerciseText.cget("text") + key + "\n"
             exerciseText["text"] = exerciseTextData
-            repsTextData = repsText.cget("text") + str(exercise["reps"]) + "\n"
+            repsTextData = repsText.cget("text") + str(exercises[key][0]) + "\n"
             repsText["text"] = repsTextData
-            setsTextData = setsText.cget("text") + str(exercise["sets"]) + "\n"
+            setsTextData = setsText.cget("text") + str(exercises[key][1]) + "\n"
             setsText["text"] = setsTextData
     elif len(data) == 0:
         file = open(os.path.join(path, workoutOptionMenu.get()), "w")
-        file.write('{"exercises": []}')
+        file.write('{}')
         file.close()
         print("ADDED INITIAL JSON DATA TO FILE")
         exerciseText["text"] = "(empty)"
@@ -90,7 +90,6 @@ def addStepToWorkout():
     name = nameExerciseEntry.get()
     reps = repsEntry.get()
     sets = setsEntry.get()
-    print("type reps = " + str(type(reps)))
     if name == "" or reps == "" or sets == "":
         create_toplevel("PyFit", "One or more of the fields haven't been filled in")
     elif not reps.isnumeric():
@@ -101,18 +100,10 @@ def addStepToWorkout():
         file = open(os.path.join(path, workoutOptionMenu.get()), "r")
         data = file.read()
         file.close()
-        source = json.loads(data)
-        exercises = source["exercises"]
-        exercise = '{"name": "' + str(name) + '", "reps": "' + str(reps) + '", "sets": "' + str(sets) + '"}'
-        exercises.append(exercise)
-        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
-        file.write('{"exercises": [')
-        for index, item in enumerate(exercises):
-            file.write(str(item).replace("'", '"'))
-            if index + 1 < len(exercises):
-                file.write(",")
-        file.write(']}')
-        file.close()
+        exercises = json.loads(data)
+        exercises[name] = [str(reps), str(sets)]
+        with open(os.path.join(path, workoutOptionMenu.get()), "w") as outfile:
+            json.dump(exercises, outfile)
     viewWorkout()
 
 
@@ -120,18 +111,11 @@ def removeLastStep():
     file = open(os.path.join(path, workoutOptionMenu.get()), "r")
     data = file.read()
     file.close()
-    source = json.loads(data)
-    exercises = source["exercises"]
+    exercises = json.loads(data)
     if len(exercises) >= 1:
-        exercises.pop()
-        file = open(os.path.join(path, workoutOptionMenu.get()), "w")
-        file.write('{"exercises": [')
-        for index, item in enumerate(exercises):
-            file.write(str(item).replace("'", '"'))
-            if index + 1 < len(exercises):
-                file.write(",")
-        file.write(']}')
-        file.close()
+        del exercises[list(exercises)[-1]]
+        with open(os.path.join(path, workoutOptionMenu.get()), "w") as outfile:
+            json.dump(exercises, outfile)
     else:
         create_toplevel("PyFit", "Workout doesn't contain any steps")
     viewWorkout()
@@ -174,40 +158,40 @@ def nextStep():
     global showRestScreen
     file = open(os.path.join(path, workoutOptionMenu.get()), "r")
     data = file.read()
-    source = json.loads(data)
-    exercises = source["exercises"]
+    exercises = json.loads(data)
+    keys = list(exercises)
 
     if totalRepCount == 0:
         print("first exercise")
-        currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
-        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
+        currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
+        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
     if showRestScreen:
         print("SHOW REST SCREEN")
         currentStepLabel["text"] = "Rest"
-        if exerciseSet == int(exercises[exerciseStep]["sets"]):
+        if exerciseSet == int(exercises[keys[exerciseStep]][1]):
             if exerciseStep < len(exercises) - 1:
-                currentSetLabel["text"] = f"Next up: {exercises[exerciseStep + 1]['reps']}x {exercises[exerciseStep + 1]['name']}"
+                currentSetLabel["text"] = f"Next up: {exercises[keys[exerciseStep + 1]][0]}x {keys[exerciseStep + 1]}"
             else:
                 currentSetLabel["text"] = f'Click "Finish" to go back to main menu'
                 nextStepButton.set_text("Finish")
         else:
-            currentSetLabel["text"] = f"Next up: {exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
-    elif exerciseSet == int(exercises[exerciseStep]["sets"]):
+            currentSetLabel["text"] = f"Next up: {exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
+    elif exerciseSet == int(exercises[keys[exerciseStep]][1]):
         print("+1 exercise")
         exerciseStep += 1
         exerciseSet = 1
         if exerciseStep < len(exercises):
-            currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
-            currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
+            currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
+            currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
         else:
             print("END OF EXERCISE")
             returnToMain()
     else:
         print("+1 set")
         exerciseSet += 1
-        totalRepCount += int(exercises[exerciseStep]["reps"])
-        currentStepLabel["text"] = f"{exercises[exerciseStep]['reps']}x {exercises[exerciseStep]['name']}"
-        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[exerciseStep]['sets']}"
+        totalRepCount += int(exercises[keys[exerciseStep]][0])
+        currentStepLabel["text"] = f"{exercises[keys[exerciseStep]][0]}x {keys[exerciseStep]}"
+        currentSetLabel["text"] = f"set {exerciseSet} of {exercises[keys[exerciseStep]][1]}"
         print(f"exerciseStep = {exerciseStep}, exerciseSet = {exerciseSet}, exerciseRep = {totalRepCount}")
     showRestScreen = not showRestScreen
 

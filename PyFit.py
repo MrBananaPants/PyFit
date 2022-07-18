@@ -136,6 +136,23 @@ def remove_workout_step():
     clear_entries()
 
 
+def remove_workout():
+    workouts = get_stored_workouts()
+    if len(workouts) == 1:
+        messagebox.showerror("PyFit", f'You must have at least 1 workout')
+        return
+    name = workout_option_menu.get()
+    print(f"filename = {name}")
+    if name == "default.json":
+        messagebox.showerror("PyFit", f"You can't remove the default workout")
+        return
+    os.remove(os.path.join(path, name))
+    workout_option_menu.configure(values=get_stored_workouts())
+    workout_option_menu.set("default.json")
+    app.update()
+    messagebox.showinfo("PyFit", f'{name} has been removed')
+
+
 def raise_main_frame():
     main_frame.pack(anchor="w", fill="both", expand=True)
     workout_frame.pack_forget()
@@ -297,6 +314,8 @@ workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC",
 workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
 create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
 create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
+remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", text="Remove", command=remove_workout)
+remove_workout_button.place(relx=0.71, rely=0.105, anchor=ctk.CENTER)
 
 settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=80, text="Settings", command=showSettings)
 settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)

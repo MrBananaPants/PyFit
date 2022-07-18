@@ -231,6 +231,7 @@ def reset():
     workoutOptionMenu.set("default.json")
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
+
 def remove_files():
     shutil.rmtree(path)
 
@@ -340,10 +341,10 @@ currentStepLabel.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
 currentSetLabel = tk.Label(workoutFrame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
 currentSetLabel.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 
-nextStepButton = ctk.CTkButton(master=workoutFrame, width=300, height=125, text="START", text_font=('Segoe UI', 50), command=nextStep)
+nextStepButton = ctk.CTkButton(master=workoutFrame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=nextStep)
 nextStepButton.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
-returnButton = ctk.CTkButton(master=workoutFrame, width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=returnToMain)
+returnButton = ctk.CTkButton(master=workoutFrame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=returnToMain)
 returnButton.place(relx=0.05, rely=0.05, anchor=ctk.CENTER)
 
 if __name__ == "__main__":

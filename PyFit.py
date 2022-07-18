@@ -7,7 +7,7 @@ from tkinter import messagebox, filedialog
 
 import customtkinter as ctk
 
-path = os.path.join(os.getenv("HOME"), "PyFit/workouts")
+path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
 version = "0.3.0"
 
 
@@ -254,10 +254,11 @@ def returnToMain():
 
 
 def main():
-    check_files()
     viewWorkout()
     app.mainloop()
 
+
+check_files()
 
 # App settings + layout
 app = ctk.CTk()

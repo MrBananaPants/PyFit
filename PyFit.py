@@ -1,11 +1,14 @@
 import json
 import os
 import tkinter as tk
+import urllib.request
 from pathlib import Path
+from tkinter import messagebox, filedialog
 
 import customtkinter as ctk
 
 path = os.path.join(os.getenv("HOME"), "PyFit/workouts")
+version = "0.3.0"
 
 
 def check_files():
@@ -209,6 +212,32 @@ def nextStep():
     showRestScreen = not showRestScreen
 
 
+def checkForUpdates():
+    print("CHECKING FOR UPDATES")
+    tag = os.popen('curl -sL https://api.github.com/repos/MrBananaPants/PyFit/releases/latest').read()
+    tag = json.loads(tag)
+    latest_version = int(str(tag["tag_name"]).lstrip('0').replace(".", ""))
+    current_version = int(str(version).lstrip('0').replace(".", ""))
+    print(f"latest: {latest_version}, installed: {current_version}")
+
+    if latest_version > current_version:
+        if messagebox.askyesno("PyFit", "An update is available. Do you want to download the latest version?"):
+            save_path = filedialog.askdirectory(title="Select save location")
+            # todo: Change "PyFit.zip" to "PyFit.dmg" after release of version 0.3.0
+            urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.zip"))
+            messagebox.showinfo("PyFit", "The latest version has been downloaded")
+    else:
+        messagebox.showinfo("PyFit", "You already have the latest version installed")
+
+
+def showSettings():
+    window = ctk.CTkToplevel()
+    window.title("Settings")
+    window.geometry("400x200")
+    checkForUpdatesButton = ctk.CTkButton(master=window, text="Check for updates", command=checkForUpdates)
+    checkForUpdatesButton.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+
+
 def returnToMain():
     global exerciseStep
     global exerciseSet
@@ -252,6 +281,9 @@ workoutOptionMenu = ctk.CTkOptionMenu(master=actionFrame, values=getStoredWorkou
 workoutOptionMenu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
 createNewWorkoutButton = ctk.CTkButton(master=actionFrame, text="Create new workout", command=createNewWorkoutFile)
 createNewWorkoutButton.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
+
+settingsButton = ctk.CTkButton(master=actionFrame, width=80, text="Settings", command=showSettings)
+settingsButton.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
 
 exerciseLabel = ctk.CTkLabel(master=actionFrame, text="Edit selected workout: ")
 exerciseLabel.place(relx=0.0125, rely=0.25, anchor=ctk.W)

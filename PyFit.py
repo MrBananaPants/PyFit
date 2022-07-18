@@ -17,23 +17,25 @@ def check_files():
     if not os.path.exists(path):
         os.makedirs(path)
         print("DIRECTORY CREATED")
-    # Check if the needed files exist. If not, create them
-    workout_file = Path(os.path.join(path, "default.json"))
-    workout_file.touch(exist_ok=True)
-    if os.path.getsize(os.path.join(path, "default.json")) == 0:
-        file = open(os.path.join(path, "default.json"), "a")
-        file.write(
-            '{ "Push-ups": [ 10, 5 ], "Leg Raises": [ 30, 1 ], "Hip raises": [ 30, 1 ], "Toe touches": [ 30, 1 ], "Flutter kicks": [ 30, 1 ], "Sit-ups": [ 30, 1 ], "Pull-ups": [ 10, 1 ], "Chin-ups": [ 10, 1 ], "Biceps": [ 10, 1 ], "Forward fly": [ 10, 1 ], "Side fly": [ 10, 1 ], "Forearms": [ 50, 2 ] }')
-        file.close()
-    else:
-        # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
-        default_file = open(os.path.join(path, "default.json"))
-        data = default_file.read()
-        default_file.close()
-        exercises = json.loads(data)
-        if list(exercises)[0] == "exercises":
-            remove_files()
-            check_files()
+    # Check if at least one workout file exists. If not, create a default workout.
+    if len(get_stored_workouts()) == 0:
+        workout_file = Path(os.path.join(path, "default.json"))
+        workout_file.touch(exist_ok=True)
+        if os.path.getsize(os.path.join(path, "default.json")) == 0:
+            file = open(os.path.join(path, "default.json"), "a")
+            file.write(
+                '{ "Push-ups": [ 10, 5 ], "Leg Raises": [ 30, 1 ], "Hip raises": [ 30, 1 ], "Toe touches": [ 30, 1 ], "Flutter kicks": [ 30, 1 ], "Sit-ups": [ 30, 1 ], "Pull-ups": [ 10, 1 ], "Chin-ups": [ 10, 1 ], "Biceps": [ 10, 1 ], "Forward fly": [ 10, 1 ], "Side fly": [ 10, 1 ], "Forearms": [ 50, 2 ] }')
+            file.close()
+    # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
+    files = get_stored_workouts()
+    filename = files[0]
+    default_file = open(os.path.join(path, filename))
+    data = default_file.read()
+    default_file.close()
+    exercises = json.loads(data)
+    if list(exercises)[0] == "exercises":
+        remove_files()
+        check_files()
 
 
 def create_new_workout_file():
@@ -48,7 +50,6 @@ def create_new_workout_file():
 
 def get_stored_workouts():
     found_workouts = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    print(found_workouts)
     found_workouts_not_hidden = []
     for workout in found_workouts:
         if workout[0] != ".":
@@ -143,9 +144,6 @@ def remove_workout():
         return
     name = workout_option_menu.get()
     print(f"filename = {name}")
-    if name == "default.json":
-        messagebox.showerror("PyFit", f"You can't remove the default workout")
-        return
     os.remove(os.path.join(path, name))
     workout_option_menu.configure(values=get_stored_workouts())
     workout_option_menu.set("default.json")

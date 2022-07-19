@@ -8,7 +8,10 @@ from tkinter import messagebox, filedialog
 
 import customtkinter as ctk
 
-path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
+if os.name == 'nt':
+    path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
+else:
+    path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
 version = "0.3.0"
 
 
@@ -247,7 +250,10 @@ def check_for_updates():
     if latest_version > current_version:
         if messagebox.askyesno("PyFit", "An update is available. Do you want to download the latest version?"):
             save_path = filedialog.askdirectory(title="Select save location")
-            urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.dmg"))
+            if os.name == 'nt':
+                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.zip"))
+            else:
+                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
     else:
         messagebox.showinfo("PyFit", "You already have the latest version installed")

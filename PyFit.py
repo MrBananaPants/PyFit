@@ -25,10 +25,9 @@ def check_files():
         workout_file = Path(os.path.join(path, "default.json"))
         workout_file.touch(exist_ok=True)
         if os.path.getsize(os.path.join(path, "default.json")) == 0:
-            with open("exercise.json", "r") as exercise_file:
-                data = exercise_file.read()
             file = open(os.path.join(path, "default.json"), "a")
-            file.write(data)
+            file.write(
+                '{ "Push-ups": [ "10", "5", "" ], "Leg Raises": [ "30", "1", "" ], "Hip raises": [ "30", "1", "" ], "Toe touches": [ "30", "1", "" ], "Flutter kicks": [ "30", "1", "" ], "Sit-ups": [ "30", "1", "" ], "Pull-ups": [ "10", "1", "" ], "Chin-ups": [ "10", "1", "" ], "Biceps": [ "10", "1", "" ], "Forward fly": [ "10", "1", "" ], "Side fly": [ "10", "1", "" ], "Forearms": [ "50", "2", "" ] }')
             file.close()
     # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
     files = get_stored_workouts()

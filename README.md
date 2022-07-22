@@ -1,5 +1,5 @@
 # PyFit
-A macOS Python app that displays your workout routine step by step. It shows you the current exercise and set, and it automatically adds a rest between each set.
+A Windows and macOS app that displays your workout routine step by step. It shows you the current exercise (with weight info), the current set, and it automatically adds a rest between sets.
 
 On the rest screen, you can see what the next exercise will be.
 
@@ -20,7 +20,7 @@ You can add and edit your own workout routines right inside the app.
     <img src="media/Screenshot4.png" height="500" alt=""/>
 </div>
 
-# Requirements to build
+# Steps to build for macOS
 You need `py2app` to compile the app yourself.
 
 Use `pip install py2app` to install it.

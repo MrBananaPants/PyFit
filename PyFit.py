@@ -7,6 +7,7 @@ from pathlib import Path
 from tkinter import messagebox, filedialog
 
 import customtkinter as ctk
+import requests
 
 if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
@@ -241,7 +242,7 @@ def next_step():
 
 def check_for_updates():
     print("CHECKING FOR UPDATES")
-    tag = os.popen('curl -sL https://api.github.com/repos/MrBananaPants/PyFit/releases/latest').read()
+    tag = requests.get("https://api.github.com/repos/MrBananaPants/PyFit/releases/latest").text
     tag = json.loads(tag)
     latest_version = int(str(tag["tag_name"]).lstrip('0').replace(".", ""))
     current_version = int(str(version).lstrip('0').replace(".", ""))
@@ -253,7 +254,7 @@ def check_for_updates():
             if os.name == 'nt':
                 urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.zip"))
             else:
-                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.dmg"))
+                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.exe"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
     else:
         messagebox.showinfo("PyFit", "You already have the latest version installed")

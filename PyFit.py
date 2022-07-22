@@ -13,7 +13,13 @@ if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
 else:
     path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
+
+# Global variables
 version = "0.4.0"
+exercise_index = 0
+info_index = 0
+exercise_list = []
+info_list = []
 
 
 def check_files():
@@ -168,76 +174,55 @@ def raise_workout_frame():
     if data != "{}":
         workout_frame.pack(anchor="w", fill="both", expand=True)
         main_frame.pack_forget()
+        create_exercises_lists()
     else:
         messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
 
 
-exercise_step = 0
-exercise_set = 0
-total_rep_count = 0
-show_rest_screen = False
-
-
-def next_step():
-    next_step_button.set_text("Next step")
-    global exercise_step
-    global exercise_set
-    global total_rep_count
-    global show_rest_screen
+def create_exercises_lists():
+    global exercise_index
+    global info_index
+    global exercise_list
+    global info_list
+    exercise_index = 0
+    info_index = 0
+    exercise_list = []
+    info_list = []
+    next_step_button.set_text("Start")
     file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     exercises = json.loads(data)
     keys = list(exercises)
+    for key in keys:
+        for i in range(0, int(exercises[key][1])):
+            if exercises[key][2] == "":
+                exercise_list.append(f"{exercises[key][0]}x {key}")
+            else:
+                exercise_list.append(f"{exercises[key][0]}x {key} ({exercises[key][2]}kg)")
+            info_list.append(f"Next up: {exercise_list[-1]}")
+            info_list.append(f"Set {i + 1} of {exercises[key][1]}")
+            exercise_list.append("Rest")
+    info_list.append('Click "Finish" to go back to main menu')
+    info_label["text"] = info_list[info_index]
+    info_index += 1
+    return exercise_list, info_list
 
-    if total_rep_count == 0:
-        print("first exercise")
-        if exercises[keys[exercise_step]][2] == "":
-            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
-        else:
-            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
-        current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
-    if show_rest_screen:
-        print("SHOW REST SCREEN")
-        current_step_label["text"] = "Rest"
-        if exercise_set == int(exercises[keys[exercise_step]][1]):
-            if exercise_step < len(exercises) - 1:
-                if exercises[keys[exercise_step + 1]][2] == "":
-                    current_set_label["text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]}"
-                else:
-                    current_set_label[
-                        "text"] = f"Next up: {exercises[keys[exercise_step + 1]][0]}x {keys[exercise_step + 1]} ({exercises[keys[exercise_step + 1]][2]}kg)"
-            else:
-                current_set_label["text"] = f'Click "Finish" to go back to main menu'
-                next_step_button.set_text("Finish")
-        else:
-            if exercises[keys[exercise_step]][2] == "":
-                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
-            else:
-                current_set_label["text"] = f"Next up: {exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
-    elif exercise_set == int(exercises[keys[exercise_step]][1]):
-        print("+1 exercise")
-        exercise_step += 1
-        exercise_set = 1
-        if exercise_step < len(exercises):
-            if exercises[keys[exercise_step]][2] == "":
-                current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
-            else:
-                current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
-            current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
-        else:
-            print("END OF EXERCISE")
-            return_to_main()
-    else:
-        print("+1 set")
-        exercise_set += 1
-        total_rep_count += int(exercises[keys[exercise_step]][0])
-        if exercises[keys[exercise_step]][2] == "":
-            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]}"
-        else:
-            current_step_label["text"] = f"{exercises[keys[exercise_step]][0]}x {keys[exercise_step]} ({exercises[keys[exercise_step]][2]}kg)"
-        current_set_label["text"] = f"set {exercise_set} of {exercises[keys[exercise_step]][1]}"
-        print(f"exerciseStep = {exercise_step}, exerciseSet = {exercise_set}, exerciseRep = {total_rep_count}")
-    show_rest_screen = not show_rest_screen
+
+def next_step():
+    global exercise_index
+    global info_index
+    global exercise_list
+    global info_list
+    next_step_button.set_text("Next")
+    if info_index == len(info_list):
+        return_to_main()
+        return
+    exercise_label["text"] = exercise_list[exercise_index]
+    exercise_index += 1
+    info_label["text"] = info_list[info_index]
+    info_index += 1
+    if info_index == len(info_list):
+        next_step_button.set_text("Finish")
 
 
 def check_for_updates():
@@ -294,17 +279,9 @@ def clear_entries():
 
 
 def return_to_main():
-    global exercise_step
-    global exercise_set
-    global total_rep_count
-    global show_rest_screen
-    exercise_step = 0
-    exercise_set = 0
-    total_rep_count = 0
-    show_rest_screen = False
     raise_main_frame()
-    current_step_label["text"] = "Press START to begin"
-    current_set_label["text"] = ""
+    exercise_label["text"] = "Press START to begin"
+    info_label["text"] = ""
     next_step_button.set_text("START")
 
 
@@ -391,10 +368,10 @@ weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 # workoutFrame view
 workout_frame = ctk.CTkFrame(app, fg_color="#212121")
 
-current_step_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
-current_step_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
-current_set_label = tk.Label(workout_frame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
-current_set_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
+exercise_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
+exercise_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
+info_label = tk.Label(workout_frame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
+info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 
 next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=next_step)
 next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)

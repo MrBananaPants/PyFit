@@ -13,7 +13,7 @@ if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
 else:
     path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
-version = "0.3.0"
+version = "0.4.0"
 
 
 def check_files():

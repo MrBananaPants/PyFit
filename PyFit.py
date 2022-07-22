@@ -283,7 +283,7 @@ def showSettings():
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
     check_for_updates_button.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
-    about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie.\nPyFit v{version}")
+    about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
     about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
 

@@ -161,13 +161,14 @@ def raise_main_frame():
 
 
 def raise_workout_frame():
-    file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
-    data = file.read()
-    if len(data) != 0:
+    workout_data = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
+    data = workout_data.read()
+    workout_data.close()
+    if data != "{}":
         workout_frame.pack(anchor="w", fill="both", expand=True)
         main_frame.pack_forget()
     else:
-        messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one")
+        messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
 
 
 exercise_step = 0

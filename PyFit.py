@@ -11,8 +11,10 @@ import requests
 
 if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
+    settings_path = os.path.join(os.getenv("APPDATA"), "PyFit")
 else:
     path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
+    settings_path = os.path.join(os.getenv("HOME"), "PyFit")
 
 # Global variables
 version = "0.4.0"
@@ -46,6 +48,16 @@ def check_files():
     if "exercises" in exercises:
         remove_files()
         check_files()
+    # Check if the settings file exists. Create one if it doesn't.
+    settings_file = Path(os.path.join(settings_path, "settings.json"))
+    settings_file.touch(exist_ok=True)
+    if os.path.getsize(os.path.join(settings_path, "settings.json")) == 0:
+        print("CREATING SETTINGS FILE")
+        with open(os.path.join(settings_path, "settings.json"), "w") as file:
+            settings = {
+                "theme": "Dark"
+            }
+            json.dump(settings, file)
 
 
 def create_new_workout_file():
@@ -62,9 +74,9 @@ def get_stored_workouts():
     found_workouts = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     found_workouts_not_hidden = []
     for workout in found_workouts:
-        if workout[0] != ".":
+        if workout[0] != "." and workout != "settings.json":
             found_workouts_not_hidden.append(workout.replace(".json", ""))
-    print(found_workouts_not_hidden)
+    print(f"found workouts: {found_workouts_not_hidden}")
     return found_workouts_not_hidden
 
 
@@ -79,12 +91,29 @@ def get_stored_workout_names():
     return keys
 
 
-def workout_option_menu_selection(choise):
+def workout_option_menu_selection(choice):
     view_workout()
 
 
-def stored_workout_menu_selection(choise):
+def stored_workout_menu_selection(choice):
     update_entries()
+
+
+def theme_option_selection(choice):
+    print(f"Selected theme {choice}")
+    change_theme(choice)
+
+
+def change_theme(theme):
+    print("CHANGING THEME")
+    file = open(os.path.join(settings_path, "settings.json"), "r")
+    data = file.read()
+    file.close()
+    settings = json.loads(data)
+    settings["theme"] = str(theme)
+    with open(os.path.join(settings_path, "settings.json"), "w") as outfile:
+        json.dump(settings, outfile)
+    ctk.set_appearance_mode(str(theme).lower())
 
 
 def update_entries():
@@ -142,7 +171,6 @@ def view_workout():
 
     else:
         exercise_text.configure(text="(empty)")
-
 
 
 def add_workout_step():
@@ -350,10 +378,23 @@ def showSettings():
     settings_window.geometry("400x200")
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
+    file = open(os.path.join(settings_path, "settings.json"), "r")
+    data = file.read()
+    file.close()
+    settings = json.loads(data)
+    theme = settings["theme"]
+
+    theme_label = ctk.CTkLabel(master=settings_window, text=f"Choose theme:")
+    theme_label.place(relx=0.3, rely=0.2, anchor=ctk.CENTER)
+    theme_selection = ctk.CTkOptionMenu(master=settings_window, fg_color="#3C99DC", dynamic_resizing=False, values=["Light", "Dark", "System"],
+                                        command=theme_option_selection)
+    theme_selection.place(relx=0.625, rely=0.2, anchor=ctk.CENTER)
+    theme_selection.set(theme)
+
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
-    check_for_updates_button.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+    check_for_updates_button.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
-    check_for_updates_button.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+    check_for_updates_button.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
 
     about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
     about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
@@ -389,7 +430,13 @@ app = ctk.CTk()
 app.geometry("1280x720")
 app.title("PyFit")
 
-ctk.set_appearance_mode("system")
+theme_file = open(os.path.join(settings_path, "settings.json"), "r")
+theme_data = theme_file.read()
+theme_file.close()
+settings_data = json.loads(theme_data)
+
+print(f'setting theme to {str(settings_data["theme"]).lower()}')
+ctk.set_appearance_mode(str(settings_data["theme"]).lower())
 app.configure(bg=("#f2f2f2", "#202020"))
 
 # mainFrame view

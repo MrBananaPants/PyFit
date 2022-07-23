@@ -496,7 +496,7 @@ next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width
 next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
 return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=return_to_main)
-return_button.place(relx=0.05, rely=0.05, anchor=ctk.CENTER)
+return_button.place(relx=0.0375, rely=0.055, anchor=ctk.CENTER)
 
 if __name__ == "__main__":
     main()

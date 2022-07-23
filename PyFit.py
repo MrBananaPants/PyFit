@@ -170,6 +170,9 @@ def remove_workout_step():
     data = file.read()
     file.close()
     exercises = json.loads(data)
+    if name == "Select workout step":
+        messagebox.showerror("PyFit", "No workout step selected")
+        return
     del exercises[name]
     with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
         json.dump(exercises, outfile)

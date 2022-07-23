@@ -142,7 +142,7 @@ def add_workout_step():
     sets = sets_entry.get()
     weight = weight_entry.get()
     if name == "" or reps == "" or sets == "":
-        messagebox.showerror("PyFit", "One or more of the fields haven't been filled in")
+        messagebox.showerror("PyFit", "One or more of the required fields are empty")
     elif not reps.isnumeric():
         messagebox.showerror("PyFit", "reps is not a number")
     elif not sets.isnumeric():

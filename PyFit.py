@@ -11,10 +11,11 @@ import requests
 
 if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
-    settings_path = os.path.join(os.getenv("APPDATA"), "PyFit")
+    main_path = os.path.join(os.getenv("APPDATA"), "PyFit")
+
 else:
     path = os.path.join(os.getenv("HOME"), "PyFit", "workouts")
-    settings_path = os.path.join(os.getenv("HOME"), "PyFit")
+    main_path = os.path.join(os.getenv("HOME"), "PyFit")
 
 # Global variables
 version = "0.4.0"
@@ -49,11 +50,11 @@ def check_files():
         remove_files()
         check_files()
     # Check if the settings file exists. Create one if it doesn't.
-    settings_file = Path(os.path.join(settings_path, "settings.json"))
+    settings_file = Path(os.path.join(main_path, "settings.json"))
     settings_file.touch(exist_ok=True)
-    if os.path.getsize(os.path.join(settings_path, "settings.json")) == 0:
+    if os.path.getsize(os.path.join(main_path, "settings.json")) == 0:
         print("CREATING SETTINGS FILE")
-        with open(os.path.join(settings_path, "settings.json"), "w") as file:
+        with open(os.path.join(main_path, "settings.json"), "w") as file:
             settings = {
                 "theme": "Dark"
             }
@@ -106,12 +107,12 @@ def theme_option_selection(choice):
 
 def change_theme(theme):
     print("CHANGING THEME")
-    file = open(os.path.join(settings_path, "settings.json"), "r")
+    file = open(os.path.join(main_path, "settings.json"), "r")
     data = file.read()
     file.close()
     settings = json.loads(data)
     settings["theme"] = str(theme)
-    with open(os.path.join(settings_path, "settings.json"), "w") as outfile:
+    with open(os.path.join(main_path, "settings.json"), "w") as outfile:
         json.dump(settings, outfile)
     ctk.set_appearance_mode(str(theme).lower())
 
@@ -364,12 +365,13 @@ def reset():
     workout_option_menu.set(get_stored_workouts()[0])
     select_stored_workout_menu.configure(values=get_stored_workout_names())
     select_stored_workout_menu.set(get_stored_workout_names()[0])
+    ctk.set_appearance_mode("dark")
     app.update()
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
 
 def remove_files():
-    shutil.rmtree(path)
+    shutil.rmtree(main_path)
 
 
 def showSettings():
@@ -378,7 +380,7 @@ def showSettings():
     settings_window.geometry("400x200")
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
-    file = open(os.path.join(settings_path, "settings.json"), "r")
+    file = open(os.path.join(main_path, "settings.json"), "r")
     data = file.read()
     file.close()
     settings = json.loads(data)
@@ -430,7 +432,7 @@ app = ctk.CTk()
 app.geometry("1280x720")
 app.title("PyFit")
 
-theme_file = open(os.path.join(settings_path, "settings.json"), "r")
+theme_file = open(os.path.join(main_path, "settings.json"), "r")
 theme_data = theme_file.read()
 theme_file.close()
 settings_data = json.loads(theme_data)

@@ -68,9 +68,40 @@ def get_stored_workouts():
     return found_workouts_not_hidden
 
 
-def combobox_selection(choice):
+def get_stored_workout_names():
+    file = open(os.path.join(path, workout_option_menu.get()) + ".json", "r")
+    data = file.read()
+    print(data)
+    file.close()
+    exercises = json.loads(data)
+    keys = list(exercises)
+    keys.insert(0, "Select workout step")
+    return keys
+
+
+def workout_option_menu_selection(choise):
     view_workout()
-    # workoutOptionMenu.set(choice)
+
+
+def stored_workout_menu_selection(choise):
+    update_entries()
+
+
+def update_entries():
+    print("UPDATING ENTRIES")
+    file = open(os.path.join(path, workout_option_menu.get()) + ".json", "r")
+    data = file.read()
+    file.close()
+    exercises = json.loads(data)
+    key = select_stored_workout_menu.get()
+    if key == "Select workout step":
+        return
+    clear_edit_entries()
+    edit_name_exercise_entry.insert(0, key)
+    edit_reps_entry.insert(0, exercises[key][0])
+    edit_sets_entry.insert(0, exercises[key][1])
+    if exercises[key][2] != "":
+        edit_weight_entry.insert(0, exercises[key][2])
 
 
 def reset_workout_view():
@@ -85,7 +116,6 @@ def view_workout():
     print("VIEW WORKOUT")
     file = open(os.path.join(path, workout_option_menu.get()) + ".json", "r")
     data = file.read()
-    print(data)
     file.close()
     if data != '{}' and len(data) > 0:
         exercises = json.loads(data)
@@ -106,7 +136,7 @@ def view_workout():
         exercise_text["text"] = "(empty)"
 
 
-def add_edit_workout_step():
+def add_workout_step():
     name = name_exercise_entry.get()
     reps = reps_entry.get()
     sets = sets_entry.get()
@@ -122,30 +152,64 @@ def add_edit_workout_step():
         data = file.read()
         file.close()
         exercises = json.loads(data)
+        keys = list(exercises)
+        if name in keys:
+            messagebox.showerror("PyFit", "Exercise already exists")
+            return
         exercises[name] = [str(reps), str(sets), str(weight)]
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
     view_workout()
     clear_entries()
+    select_stored_workout_menu.configure(values=get_stored_workout_names())
 
 
 def remove_workout_step():
-    name = name_exercise_entry.get()
+    name = select_stored_workout_menu.get()
     file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     file.close()
     exercises = json.loads(data)
-    if name == "":
-        messagebox.showerror("PyFit", "Name field is empty. Please enter step name you want to remove.")
-        return
-    if name in exercises:
-        del exercises[name]
+    del exercises[name]
+    with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
+        json.dump(exercises, outfile)
+    view_workout()
+    clear_edit_entries()
+    select_stored_workout_menu.configure(values=get_stored_workout_names())
+    select_stored_workout_menu.set(get_stored_workout_names()[0])
+
+
+def edit_workout_step():
+    name = edit_name_exercise_entry.get()
+    reps = edit_reps_entry.get()
+    sets = edit_sets_entry.get()
+    weight = edit_weight_entry.get()
+    if name == "" or reps == "" or sets == "":
+        messagebox.showerror("PyFit", "One or more of the required fields are empty")
+    elif not reps.isnumeric():
+        messagebox.showerror("PyFit", "reps is not a number")
+    elif not sets.isnumeric():
+        messagebox.showerror("PyFit", "sets is not a number")
+    elif weight != "" and not weight.isnumeric():
+        messagebox.showerror("PyFit", "weight is not a number")
+    else:
+        file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
+        data = file.read()
+        file.close()
+        exercises = json.loads(data)
+        keys = list(exercises)
+        if name not in keys:
+            messagebox.showerror("PyFit", "You can't change the exercise name")
+            edit_name_exercise_entry.delete(0, 'end')
+            edit_name_exercise_entry.insert(0, select_stored_workout_menu.get())
+            return
+        exercises[name] = [str(reps), str(sets), str(weight)]
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
-    else:
-        messagebox.showerror("PyFit", f'Workout doesn\'t contain "{name}" step.')
-    view_workout()
-    clear_entries()
+        view_workout()
+        clear_edit_entries()
+        select_stored_workout_menu.configure(values=get_stored_workout_names())
+        select_stored_workout_menu.set(get_stored_workout_names()[0])
 
 
 def remove_workout():
@@ -217,7 +281,7 @@ def next_step():
     if info_index == len(info_list):
         return_to_main()
         return
-    exercise_label["text"] = exercise_list[exercise_index]
+    select_workout_label["text"] = exercise_list[exercise_index]
     exercise_index += 1
     info_label["text"] = info_list[info_index]
     info_index += 1
@@ -247,10 +311,13 @@ def check_for_updates():
 
 def reset():
     clear_entries()
+    clear_edit_entries()
     remove_files()
     check_files()
     workout_option_menu.configure(values=get_stored_workouts())
     workout_option_menu.set(get_stored_workouts()[0])
+    select_stored_workout_menu.configure(values=get_stored_workout_names())
+    select_stored_workout_menu.set(get_stored_workout_names()[0])
     app.update()
     messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
 
@@ -279,9 +346,16 @@ def clear_entries():
     sets_entry.delete(0, 'end')
 
 
+def clear_edit_entries():
+    edit_name_exercise_entry.delete(0, 'end')
+    edit_reps_entry.delete(0, 'end')
+    edit_sets_entry.delete(0, 'end')
+    edit_weight_entry.delete(0, 'end')
+
+
 def return_to_main():
     raise_main_frame()
-    exercise_label["text"] = "Press START to begin"
+    select_workout_label["text"] = "Press START to begin"
     info_label["text"] = ""
     next_step_button.set_text("START")
 
@@ -295,7 +369,7 @@ check_files()
 
 # App settings + layout
 app = ctk.CTk()
-app.geometry("1100x650")
+app.geometry("1280x720")
 app.title("PyFit")
 app.configure(bg="#212121")
 
@@ -309,37 +383,67 @@ action_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pa
 viewer_frame = ctk.CTkFrame(master=main_frame, fg_color="#333333", corner_radius=10)
 viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
-exercise_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Select workout: ")
-exercise_label.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
+select_workout_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Select workout: ")
+select_workout_label.place(relx=0, rely=0.035, anchor=ctk.W)
 workout_option_menu = ctk.CTkOptionMenu(master=action_frame, dropdown_hover_color="#3f3f3f", dropdown_text_color="white", dropdown_color="#535353",
                                         fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(),
-                                        command=combobox_selection)
-workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
+                                        command=workout_option_menu_selection)
+workout_option_menu.place(relx=0.15, rely=0.085, anchor=ctk.CENTER)
 create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
-create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
+create_new_workout_button.place(relx=0.40, rely=0.085, anchor=ctk.CENTER)
 remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", text="Remove", command=remove_workout)
-remove_workout_button.place(relx=0.71, rely=0.105, anchor=ctk.CENTER)
+remove_workout_button.place(relx=0.60, rely=0.085, anchor=ctk.CENTER)
 
-exercise_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Edit selected workout: ")
-exercise_label.place(relx=0.0275, rely=0.25, anchor=ctk.W)
+# Add new step to workout
+add_new_step_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Add new step to workout: ")
+add_new_step_label.place(relx=0.03, rely=0.16, anchor=ctk.W)
 name_exercise_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141",
                                    width=292, placeholder_text="Exercise name")
-name_exercise_entry.place(relx=0.03, rely=0.3, anchor=ctk.W)
+name_exercise_entry.place(relx=0.03, rely=0.21, anchor=ctk.W)
 reps_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
                           placeholder_text="Amount of reps")
-reps_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
+reps_entry.place(relx=0.03, rely=0.26, anchor=ctk.W)
 sets_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
                           placeholder_text="Amount of sets")
-sets_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
+sets_entry.place(relx=0.03, rely=0.31, anchor=ctk.W)
 weight_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
                             placeholder_text="Weight (leave blank for no weight)")
-weight_entry.place(relx=0.03, rely=0.48, anchor=ctk.W)
+weight_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
 
-add_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit/Add step", command=add_edit_workout_step)
-add_step_button.place(relx=0.03, rely=0.54, anchor=ctk.W)
+add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", text="Add step", command=add_workout_step)
+add_step_button.place(relx=0.03, rely=0.41, anchor=ctk.W)
 
-remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
-remove_last_step_button.place(relx=0.325, rely=0.54, anchor=ctk.W)
+# Edit or remove workout step
+edit_remove_step_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Edit or remove step: ")
+edit_remove_step_label.place(relx=0.0275, rely=0.485, anchor=ctk.W)
+
+select_stored_workout_menu = ctk.CTkOptionMenu(master=action_frame, width=292, dropdown_hover_color="#3f3f3f", dropdown_text_color="white",
+                                               dropdown_color="#535353",
+                                               fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workout_names(),
+                                               command=stored_workout_menu_selection)
+select_stored_workout_menu.place(relx=0.03, rely=0.535, anchor=ctk.W)
+
+edit_name_exercise_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141",
+                                        width=292, placeholder_text="Exercise name")
+edit_name_exercise_entry.place(relx=0.03, rely=0.585, anchor=ctk.W)
+edit_reps_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
+                               placeholder_text="Amount of reps")
+edit_reps_entry.place(relx=0.03, rely=0.635, anchor=ctk.W)
+edit_sets_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
+                               placeholder_text="Amount of sets")
+edit_sets_entry.place(relx=0.03, rely=0.685, anchor=ctk.W)
+edit_weight_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141",
+                                 width=292, placeholder_text="Weight (no weight for selected step)")
+edit_weight_entry.place(relx=0.03, rely=0.735, anchor=ctk.W)
+
+edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit step", command=edit_workout_step)
+edit_step_button.place(relx=0.03, rely=0.785, anchor=ctk.W)
+
+remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
+remove_step_button.place(relx=0.2825, rely=0.785, anchor=ctk.W)
+
+# remove_last_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
+# remove_last_step_button.place(relx=0.325, rely=0.47, anchor=ctk.W)
 
 settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Settings", command=showSettings)
 settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
@@ -347,8 +451,8 @@ settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
 start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)
 start_workout_button.place(relx=0.65, rely=0.925, anchor=ctk.CENTER)
 
-exercise_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="white")
-exercise_label.place(relx=0.20, rely=0.0325, anchor=ctk.CENTER)
+select_workout_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="white")
+select_workout_label.place(relx=0.20, rely=0.0325, anchor=ctk.CENTER)
 
 reps_label = ctk.CTkLabel(master=viewer_frame, text="Reps", text_color="white")
 reps_label.place(relx=0.45, rely=0.0325, anchor=ctk.CENTER)
@@ -374,8 +478,8 @@ weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 # workoutFrame view
 workout_frame = ctk.CTkFrame(app, fg_color="#202020")
 
-exercise_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
-exercise_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
+select_workout_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
+select_workout_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
 info_label = tk.Label(workout_frame, text="", fg="white", bg="#212121", font=('Segoe UI', 50))
 info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 

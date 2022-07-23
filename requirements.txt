@@ -1,2 +1,2 @@
-customtkinter==4.5.9
+customtkinter==4.5.10
 setuptools==63.2.0

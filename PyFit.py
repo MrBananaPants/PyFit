@@ -418,7 +418,7 @@ add_step_button.place(relx=0.03, rely=0.41, anchor=ctk.W)
 
 # Edit or remove workout step
 edit_remove_step_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Edit or remove step: ")
-edit_remove_step_label.place(relx=0.0275, rely=0.485, anchor=ctk.W)
+edit_remove_step_label.place(relx=0.0175, rely=0.485, anchor=ctk.W)
 
 select_stored_workout_menu = ctk.CTkOptionMenu(master=action_frame, width=292, dropdown_hover_color="#3f3f3f", dropdown_text_color="white",
                                                dropdown_color="#535353",

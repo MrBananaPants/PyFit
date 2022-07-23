@@ -159,9 +159,9 @@ def add_workout_step():
         exercises[name] = [str(reps), str(sets), str(weight)]
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
-    view_workout()
-    clear_entries()
-    select_stored_workout_menu.configure(values=get_stored_workout_names())
+        view_workout()
+        clear_entries()
+        select_stored_workout_menu.configure(values=get_stored_workout_names())
 
 
 def remove_workout_step():

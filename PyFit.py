@@ -239,6 +239,7 @@ def raise_workout_frame():
     data = workout_data.read()
     workout_data.close()
     if data != "{}":
+        progressbar.set(0)
         workout_frame.pack(anchor="w", fill="both", expand=True)
         main_frame.pack_forget()
         create_exercises_lists()
@@ -280,6 +281,7 @@ def next_step():
     global info_index
     global exercise_list
     global info_list
+    progressbar.set(info_index/len(exercise_list))
     next_step_button.set_text("Next")
     if info_index == len(info_list):
         return_to_main()
@@ -481,6 +483,9 @@ weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 
 # workoutFrame view
 workout_frame = ctk.CTkFrame(app, fg_color="#202020")
+
+progressbar = ctk.CTkProgressBar(master=workout_frame, fg_color="#333333", progress_color="#3C99DC", height=15, width=1280)
+progressbar.place(relx=0.5, rely=0, anchor=ctk.N)
 
 select_workout_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
 select_workout_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)

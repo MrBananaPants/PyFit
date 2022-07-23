@@ -350,6 +350,7 @@ def clear_entries():
     name_exercise_entry.delete(0, 'end')
     reps_entry.delete(0, 'end')
     sets_entry.delete(0, 'end')
+    weight_entry.delete(0, 'end')
 
 
 def clear_edit_entries():

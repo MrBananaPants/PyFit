@@ -260,15 +260,16 @@ def remove_files():
 
 
 def showSettings():
-    settings_window = ctk.CTkToplevel()
+    settings_window = ctk.CTkToplevel(bg="#333333")
     settings_window.title("Settings")
     settings_window.geometry("400x200")
+
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
     check_for_updates_button.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
     check_for_updates_button.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
-    about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
+    about_label = ctk.CTkLabel(master=settings_window, text_color="white", text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
     about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
 
@@ -299,18 +300,19 @@ app.title("PyFit")
 app.configure(bg="#212121")
 
 # mainFrame view
-main_frame = ctk.CTkFrame(app, fg_color="#212121")
+main_frame = ctk.CTkFrame(app, fg_color="#202020")
 main_frame.pack(anchor="w", fill="both", expand=True)
 
-action_frame = ctk.CTkFrame(master=main_frame, fg_color="#E0E0E0", corner_radius=10)
+action_frame = ctk.CTkFrame(master=main_frame, fg_color="#333333", corner_radius=10)
 action_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pady=20)
 
-viewer_frame = ctk.CTkFrame(master=main_frame, fg_color="#757575", corner_radius=10)
+viewer_frame = ctk.CTkFrame(master=main_frame, fg_color="#333333", corner_radius=10)
 viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
-exercise_label = ctk.CTkLabel(master=action_frame, text="Select workout: ")
+exercise_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Select workout: ")
 exercise_label.place(relx=0.125, rely=0.055, anchor=ctk.CENTER)
-workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(),
+workout_option_menu = ctk.CTkOptionMenu(master=action_frame, dropdown_hover_color="#3f3f3f", dropdown_text_color="white", dropdown_color="#535353",
+                                        fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(),
                                         command=combobox_selection)
 workout_option_menu.place(relx=0.17, rely=0.105, anchor=ctk.CENTER)
 create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
@@ -318,15 +320,19 @@ create_new_workout_button.place(relx=0.47, rely=0.105, anchor=ctk.CENTER)
 remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", text="Remove", command=remove_workout)
 remove_workout_button.place(relx=0.71, rely=0.105, anchor=ctk.CENTER)
 
-exercise_label = ctk.CTkLabel(master=action_frame, text="Edit selected workout: ")
+exercise_label = ctk.CTkLabel(master=action_frame, text_color="white", text="Edit selected workout: ")
 exercise_label.place(relx=0.0275, rely=0.25, anchor=ctk.W)
-name_exercise_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Exercise name")
+name_exercise_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141",
+                                   width=292, placeholder_text="Exercise name")
 name_exercise_entry.place(relx=0.03, rely=0.3, anchor=ctk.W)
-reps_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Amount of reps")
+reps_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
+                          placeholder_text="Amount of reps")
 reps_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
-sets_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Amount of sets")
+sets_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
+                          placeholder_text="Amount of sets")
 sets_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
-weight_entry = ctk.CTkEntry(master=action_frame, width=292, placeholder_text="Weight (leave blank for no weight)")
+weight_entry = ctk.CTkEntry(master=action_frame, border_color="#535353", placeholder_text_color="#afafaf", text_color="white", fg_color="#414141", width=292,
+                            placeholder_text="Weight (leave blank for no weight)")
 weight_entry.place(relx=0.03, rely=0.48, anchor=ctk.W)
 
 add_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit/Add step", command=add_edit_workout_step)
@@ -342,31 +348,31 @@ start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", te
 start_workout_button.place(relx=0.65, rely=0.925, anchor=ctk.CENTER)
 
 exercise_label = ctk.CTkLabel(master=viewer_frame, text="Exercise", text_color="white")
-exercise_label.place(relx=0.20, rely=0.025, anchor=ctk.CENTER)
+exercise_label.place(relx=0.20, rely=0.0325, anchor=ctk.CENTER)
 
 reps_label = ctk.CTkLabel(master=viewer_frame, text="Reps", text_color="white")
-reps_label.place(relx=0.45, rely=0.025, anchor=ctk.CENTER)
+reps_label.place(relx=0.45, rely=0.0325, anchor=ctk.CENTER)
 
 sets_label = ctk.CTkLabel(master=viewer_frame, text="Sets", text_color="white")
-sets_label.place(relx=0.65, rely=0.025, anchor=ctk.CENTER)
+sets_label.place(relx=0.65, rely=0.0325, anchor=ctk.CENTER)
 
 weight_label = ctk.CTkLabel(master=viewer_frame, text="Weight (kg)", text_color="white")
-weight_label.place(relx=0.85, rely=0.025, anchor=ctk.CENTER)
+weight_label.place(relx=0.85, rely=0.0325, anchor=ctk.CENTER)
 
-exercise_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="left")
+exercise_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#333333", justify="left")
 exercise_text.place(relx=0.15, rely=0.075, anchor=ctk.N)
 
-reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
+reps_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#333333", justify="center")
 reps_text.place(relx=0.45, rely=0.075, anchor=tk.N)
 
-sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
+sets_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#333333", justify="center")
 sets_text.place(relx=0.65, rely=0.075, anchor=ctk.N)
 
-weight_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#757575", justify="center")
+weight_text = tk.Label(master=viewer_frame, text="", fg="white", bg="#333333", justify="center")
 weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 
 # workoutFrame view
-workout_frame = ctk.CTkFrame(app, fg_color="#212121")
+workout_frame = ctk.CTkFrame(app, fg_color="#202020")
 
 exercise_label = tk.Label(workout_frame, text="Press START to begin", fg="white", bg="#212121", font=('Segoe UI', 100))
 exercise_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)

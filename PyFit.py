@@ -298,10 +298,11 @@ def check_for_updates():
     tag = json.loads(tag)
     latest_version = int(str(tag["tag_name"]).lstrip('0').replace(".", ""))
     current_version = int(str(version).lstrip('0').replace(".", ""))
+    latest_version_formatted = str(tag["tag_name"])
     print(f"latest: {latest_version}, installed: {current_version}")
 
     if latest_version > current_version:
-        if messagebox.askyesno("PyFit", "An update is available. Do you want to download the latest version?"):
+        if messagebox.askyesno("PyFit", f"An update is available (v{latest_version_formatted}). Do you want to download this update?"):
             save_path = filedialog.askdirectory(title="Select save location")
             if os.name == 'nt':
                 urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.zip"))

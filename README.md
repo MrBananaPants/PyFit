@@ -16,10 +16,6 @@ You can add and edit your own workout routines right inside the app.
     <img src="media/Screenshot3.png" height="500" alt=""/>
 </div>
 
-<div align="center">
-    <img src="media/Screenshot4.png" height="500" alt=""/>
-</div>
-
 # Steps to build for macOS
 You need `py2app` to compile the app yourself.
 

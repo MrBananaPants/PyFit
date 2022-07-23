@@ -256,7 +256,7 @@ def create_exercises_lists():
     info_index = 0
     exercise_list = []
     info_list = []
-    next_step_button.set_text("Start")
+    next_step_button.set_text("START")
     file = open(os.path.join(path, workout_option_menu.get() + ".json"), "r")
     data = file.read()
     exercises = json.loads(data)
@@ -282,7 +282,7 @@ def next_step():
     global exercise_list
     global info_list
     progressbar.set(info_index/len(exercise_list))
-    next_step_button.set_text("Next")
+    next_step_button.set_text("Next step")
     if info_index == len(info_list):
         return_to_main()
         return

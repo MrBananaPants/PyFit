@@ -172,6 +172,9 @@ def view_workout():
 
     else:
         exercise_text.configure(text="(empty)")
+    clear_edit_entries()
+    select_stored_workout_menu.configure(values=get_stored_workout_names())
+    select_stored_workout_menu.set(get_stored_workout_names()[0])
 
 
 def add_workout_step():

@@ -11,7 +11,7 @@ APP = ['PyFit.py']
 DATA_FILES = []
 OPTIONS = {
     'iconfile': 'media/icon.icns',
-    'plist': {'CFBundleShortVersionString': '0.5.0', },
+    'plist': {'CFBundleShortVersionString': '0.4.1', },
     'packages': ['tkinter', 'customtkinter']}
 
 setup(

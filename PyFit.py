@@ -18,7 +18,7 @@ else:
     main_path = os.path.join(os.getenv("HOME"), "PyFit")
 
 # Global variables
-version = "0.5.0"
+version = "0.4.1"
 exercise_index = 0
 info_index = 0
 exercise_list = []
@@ -359,9 +359,9 @@ def check_for_updates():
         if messagebox.askyesno("PyFit", f"An update is available (v{latest_version_formatted}). Do you want to download this update?"):
             save_path = filedialog.askdirectory(title="Select save location")
             if os.name == 'nt':
-                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.zip"))
-            else:
                 urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.exe"))
+            else:
+                urllib.request.urlretrieve(tag["assets"][0]["browser_download_url"], os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
     else:
         messagebox.showinfo("PyFit", "You already have the latest version installed")

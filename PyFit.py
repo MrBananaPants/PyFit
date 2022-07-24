@@ -314,7 +314,6 @@ def create_exercises_lists():
     info_list.append('Click "Finish" to go back to main menu')
     info_label.configure(text=info_list[info_index])
     info_index += 1
-    return exercise_list, info_list
 
 
 def next_step():

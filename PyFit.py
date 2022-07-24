@@ -333,6 +333,7 @@ def next_step():
     global info_index
     global exercise_list
     global info_list
+    progressbar.configure(width=app.winfo_width())
     progressbar.set(info_index / len(exercise_list))
     next_step_button.set_text("Next step")
     if info_index == len(info_list):
@@ -563,7 +564,7 @@ weight_text.place(relx=0.85, rely=0.075, anchor=ctk.N)
 # workoutFrame view
 workout_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))
 
-progressbar = ctk.CTkProgressBar(master=workout_frame, fg_color=("#e2e2e2", "#333333"), progress_color="#3C99DC", height=15, width=1280)
+progressbar = ctk.CTkProgressBar(master=workout_frame, fg_color=("#e2e2e2", "#333333"), progress_color="#3C99DC", height=15, width=app.winfo_width())
 progressbar.place(relx=0.5, rely=0, anchor=ctk.N)
 
 select_workout_label = ctk.CTkLabel(workout_frame, text="Press START to begin", text_font=('Segoe UI', 100))

@@ -3,7 +3,22 @@ A Windows and macOS app that displays your workout routine step by step. It show
 
 On the rest screen, you can see what the next exercise will be.
 
-You can add and edit your own workout routines right inside the app.
+# Features
+
+- Add and remove workouts
+- Add steps, edit steps, or remove steps from a workout
+- Overview of the workout step by step with step name, rep count, set count and weight
+- Automatic rest screen between each step when doing a workout
+- Progress bar on workout screen
+- Statistics after finishing workout (total rep count and total volume)
+- Dark theme and Light theme
+- Settings
+  - Choose between Dark theme, Light theme or follow system theme
+  - Reset app
+  - Check for updates
+
+# Screenshots
+
 <div align="center">
     <img src="media/Screenshot1.png" height="500" alt=""/>
 </div>

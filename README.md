@@ -8,12 +8,25 @@ You can add and edit your own workout routines right inside the app.
     <img src="media/Screenshot1.png" height="500" alt=""/>
 </div>
 
-<div align="center">
-    <img src="media/Screenshot2.png" height="500" alt=""/>
-</div>
+Dark theme             |  Light theme
+:-------------------------:|:-------------------------:
+![](media/Screenshot1.png)  |  ![](media/Screenshot2.png)
+
 
 <div align="center">
     <img src="media/Screenshot3.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot4.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot5.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot6.png" height="500" alt=""/>
 </div>
 
 # Steps to build for macOS

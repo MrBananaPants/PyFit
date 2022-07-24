@@ -293,6 +293,8 @@ def create_exercises_lists():
     global info_index
     global exercise_list
     global info_list
+    total_reps = 0
+    total_volume = 0
     exercise_index = 0
     info_index = 0
     exercise_list = []
@@ -308,12 +310,19 @@ def create_exercises_lists():
                 exercise_list.append(f"{exercises[key][0]}x {key}")
             else:
                 exercise_list.append(f"{exercises[key][0]}x {key} ({exercises[key][2]}kg)")
+                total_volume += int(exercises[key][0]) * int(exercises[key][2])
+            total_reps += int(exercises[key][0])
             info_list.append(f"Next up: {exercise_list[-1]}")
             info_list.append(f"Set {i + 1} of {exercises[key][1]}")
             exercise_list.append("Rest")
-    info_list.append('Click "Finish" to go back to main menu')
+    exercise_list[-1] = "Workout finished!"
+    if total_volume > 0:
+        info_list.append(f"You've done {total_reps} reps\nYour total volume is {total_volume}kg")
+    else:
+        info_list.append(f"You've done {total_reps} reps")
     info_label.configure(text=info_list[info_index])
     info_index += 1
+    print(f"total reps = {total_reps}, total volume = {total_volume}")
 
 
 def next_step():

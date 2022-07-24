@@ -61,6 +61,22 @@ def check_files():
             json.dump(settings, file)
 
 
+def export_workouts():
+    save_path = filedialog.askdirectory(title="Choose export location")
+    shutil.make_archive(os.path.join(save_path, "PyFit_export"), "zip", path)
+    messagebox.showinfo("PyFit", "Export complete")
+
+
+def import_workouts():
+    zip_file = filedialog.askopenfilename()
+    filename, extension = os.path.splitext(zip_file)
+    if extension != ".zip":
+        messagebox.showerror("PyFit", "Selected file is not a .zip file")
+    else:
+        shutil.unpack_archive(zip_file, path, "zip")
+        messagebox.showinfo("PyFit", "Import complete")
+
+
 def create_new_workout_file():
     dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
     filename = str(dialog.get_input()) + ".json"
@@ -361,9 +377,11 @@ def check_for_updates():
         if messagebox.askyesno("PyFit", f"An update is available (v{latest_version_formatted}). Do you want to download this update?"):
             save_path = filedialog.askdirectory(title="Select save location")
             if os.name == 'nt':
-                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.exe", os.path.join(save_path, "PyFit.exe"))
+                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.exe",
+                                           os.path.join(save_path, "PyFit.exe"))
             else:
-                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg", os.path.join(save_path, "PyFit.dmg"))
+                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
+                                           os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
     else:
         messagebox.showinfo("PyFit", "You already have the latest version installed")
@@ -390,7 +408,7 @@ def remove_files():
 def showSettings():
     settings_window = ctk.CTkToplevel()
     settings_window.title("Settings")
-    settings_window.geometry("400x250")
+    settings_window.geometry("400x225")
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
     file = open(os.path.join(main_path, "settings.json"), "r")
@@ -400,19 +418,26 @@ def showSettings():
     theme = settings["theme"]
 
     theme_label = ctk.CTkLabel(master=settings_window, text=f"Choose theme:")
-    theme_label.place(relx=0.3, rely=0.2, anchor=ctk.CENTER)
+    theme_label.place(relx=0.3, rely=0.1666, anchor=ctk.CENTER)
     theme_selection = ctk.CTkOptionMenu(master=settings_window, fg_color="#3C99DC", dynamic_resizing=False, values=["Light", "Dark", "System"],
                                         command=theme_option_selection)
-    theme_selection.place(relx=0.625, rely=0.2, anchor=ctk.CENTER)
+    theme_selection.place(relx=0.625, rely=0.1666, anchor=ctk.CENTER)
     theme_selection.set(theme)
 
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
-    check_for_updates_button.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+    check_for_updates_button.place(relx=0.5, rely=0.3332, anchor=ctk.CENTER)
+
     reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
-    reset_app_button.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
+    reset_app_button.place(relx=0.5, rely=0.5000, anchor=ctk.CENTER)
+
+    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Import workouts", command=import_workouts)
+    import_exercises_button.place(relx=0.485, rely=0.6666, anchor=ctk.E)
+
+    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Export workouts", command=export_workouts)
+    export_exercises_button.place(relx=0.515, rely=0.6666, anchor=ctk.W)
 
     about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
-    about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
+    about_label.place(relx=0.5, rely=0.86, anchor=ctk.CENTER)
 
 
 def clear_entries():

@@ -390,7 +390,7 @@ def remove_files():
 def showSettings():
     settings_window = ctk.CTkToplevel()
     settings_window.title("Settings")
-    settings_window.geometry("400x200")
+    settings_window.geometry("400x250")
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
     file = open(os.path.join(main_path, "settings.json"), "r")
@@ -408,8 +408,8 @@ def showSettings():
 
     check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
     check_for_updates_button.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
-    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
-    check_for_updates_button.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
+    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
+    reset_app_button.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
 
     about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
     about_label.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)

@@ -75,6 +75,7 @@ def import_workouts():
     else:
         shutil.unpack_archive(zip_file, path, "zip")
         messagebox.showinfo("PyFit", "Import complete")
+    workout_option_menu.configure(values=get_stored_workouts())
 
 
 def create_new_workout_file():

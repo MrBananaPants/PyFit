@@ -486,7 +486,6 @@ spawn_x = int((width_screen/2) - (width/2))
 spawn_y = int((height_screen/2) - (height/2))
 
 app.geometry(f"{width}x{height}+{spawn_x}+{spawn_y}")
-app.geometry("1280x720")
 app.title("PyFit")
 
 theme_file = open(os.path.join(main_path, "settings.json"), "r")

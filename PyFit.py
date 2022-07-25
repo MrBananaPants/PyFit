@@ -408,8 +408,15 @@ def remove_files():
 
 def showSettings():
     settings_window = ctk.CTkToplevel()
+
+    settings_width = 400
+    settings_height = 225
+
+    settings_spawn_x = int((width_screen / 2) - (settings_width / 2))
+    settings_spawn_y = int((height_screen / 2) - (settings_height / 2))
+
+    settings_window.geometry(f"{settings_width}x{settings_height}+{settings_spawn_x}+{settings_spawn_y}")
     settings_window.title("Settings")
-    settings_window.geometry("400x225")
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
     file = open(os.path.join(main_path, "settings.json"), "r")
@@ -468,6 +475,17 @@ check_files()
 
 # App settings + layout
 app = ctk.CTk()
+
+width = 1280
+height = 720
+
+width_screen = app.winfo_screenwidth()
+height_screen = app.winfo_screenheight()
+
+spawn_x = int((width_screen/2) - (width/2))
+spawn_y = int((height_screen/2) - (height/2))
+
+app.geometry(f"{width}x{height}+{spawn_x}+{spawn_y}")
 app.geometry("1280x720")
 app.title("PyFit")
 

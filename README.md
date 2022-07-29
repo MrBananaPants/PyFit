@@ -16,6 +16,7 @@ On the rest screen, you can see what the next exercise will be.
   - Choose between Dark theme, Light theme or follow system theme
   - Reset app
   - Check for updates
+  - Import and export workouts
 
 # Screenshots
 

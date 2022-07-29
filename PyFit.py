@@ -40,9 +40,8 @@ def check_files():
                     '{ "Push-ups": [ "10", "5", "" ], "Leg Raises": [ "30", "1", "" ], "Hip raises": [ "30", "1", "" ], "Toe touches": [ "30", "1", "" ], "Flutter kicks": [ "30", "1", "" ], "Sit-ups": [ "30", "1", "" ], "Pull-ups": [ "10", "1", "" ], "Chin-ups": [ "10", "1", "" ], "Biceps": [ "10", "1", "" ], "Forward fly": [ "10", "1", "" ], "Side fly": [ "10", "1", "" ], "Forearms": [ "50", "2", "" ] }')
     # Check if the user has updated from v0.2.0 to v0.3.0 or newer. If this is the case, the default exercise needs to be updated and all old exercises will be removed to prevent a startup crash.
     files = get_stored_workouts()
-    filename = files[0] + ".json"
-    with open(os.path.join(path, filename)) as default_file:
-        exercises = json.load(default_file)
+    filename = files[0]
+    exercises = get_workout_data(os.path.join(path, filename + ".json"))
     if "exercises" in exercises:
         remove_files()
         check_files()
@@ -96,12 +95,16 @@ def get_stored_workouts():
 
 
 def get_stored_workout_names():
-    with open(os.path.join(path, workout_option_menu.get()) + ".json", "r") as file:
-        exercises = json.load(file)
+    exercises = get_workout_data(os.path.join(path, workout_option_menu.get()) + ".json")
     print(str(exercises))
     keys = list(exercises)
     keys.insert(0, "Select workout step")
     return keys
+
+
+def get_workout_data(filename):
+    with open(filename, "r") as file:
+        return json.load(file)
 
 
 def workout_option_menu_selection(choice):
@@ -129,8 +132,7 @@ def change_theme(theme):
 
 def update_entries():
     print("UPDATING ENTRIES")
-    with open(os.path.join(path, workout_option_menu.get()) + ".json", "r") as file:
-        exercises = json.load(file)
+    exercises = get_workout_data(os.path.join(path, workout_option_menu.get()) + ".json")
     key = select_stored_workout_menu.get()
     if key == "Select workout step":
         return
@@ -195,8 +197,7 @@ def add_workout_step():
     elif not sets.isnumeric():
         messagebox.showerror("PyFit", "sets is not a number")
     else:
-        with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-            exercises = json.load(file)
+        exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
         keys = list(exercises)
         if name in keys:
             messagebox.showerror("PyFit", "Exercise already exists")
@@ -211,8 +212,7 @@ def add_workout_step():
 
 def remove_workout_step():
     name = select_stored_workout_menu.get()
-    with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-        exercises = json.load(file)
+    exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
     if name == "Select workout step":
         messagebox.showerror("PyFit", "No workout step selected")
         return
@@ -239,8 +239,7 @@ def edit_workout_step():
     elif weight != "" and not weight.isnumeric():
         messagebox.showerror("PyFit", "weight is not a number")
     else:
-        with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-            exercises = json.load(file)
+        exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
         keys = list(exercises)
         if name not in keys:
             messagebox.showerror("PyFit", "You can't change the exercise name")
@@ -276,9 +275,8 @@ def raise_main_frame():
 
 
 def raise_workout_frame():
-    with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as workout_data:
-        data = workout_data.read()
-    if data != "{}":
+    data = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
+    if str(data) != "{}":
         progressbar.set(0)
         select_workout_label.configure(text="Press START to begin")
         info_label.configure(text="")
@@ -302,8 +300,7 @@ def create_exercises_lists():
     exercise_list = []
     info_list = []
     next_step_button.set_text("START")
-    with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-        exercises = json.load(file)
+    exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
     keys = list(exercises)
     for key in keys:
         for i in range(0, int(exercises[key][1])):

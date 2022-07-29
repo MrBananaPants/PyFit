@@ -364,7 +364,7 @@ def next_step():
         next_step_button.set_text("Finish")
 
 
-def check_for_updates():
+def check_for_updates(alert_when_no_update=False):
     print("CHECKING FOR UPDATES")
     tag = requests.get("https://api.github.com/repos/MrBananaPants/PyFit/releases/latest").text
     tag = json.loads(tag)
@@ -384,7 +384,7 @@ def check_for_updates():
                 urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
                                            os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
-    else:
+    elif alert_when_no_update:
         messagebox.showinfo("PyFit", "You already have the latest version installed")
 
 
@@ -432,7 +432,7 @@ def showSettings():
     theme_selection.place(relx=0.625, rely=0.1666, anchor=ctk.CENTER)
     theme_selection.set(theme)
 
-    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=check_for_updates)
+    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=lambda: check_for_updates(True))
     check_for_updates_button.place(relx=0.5, rely=0.3332, anchor=ctk.CENTER)
 
     reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
@@ -467,6 +467,7 @@ def return_to_main():
 
 
 def main():
+    check_for_updates(False)
     view_workout()
     app.mainloop()
 
@@ -482,8 +483,8 @@ height = 720
 width_screen = app.winfo_screenwidth()
 height_screen = app.winfo_screenheight()
 
-spawn_x = int((width_screen/2) - (width/2))
-spawn_y = int((height_screen/2) - (height/2))
+spawn_x = int((width_screen / 2) - (width / 2))
+spawn_y = int((height_screen / 2) - (height / 2))
 
 app.geometry(f"{width}x{height}+{spawn_x}+{spawn_y}")
 app.title("PyFit")

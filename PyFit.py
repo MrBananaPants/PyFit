@@ -42,14 +42,13 @@ def check_files():
     files = get_stored_workouts()
     filename = files[0] + ".json"
     with open(os.path.join(path, filename)) as default_file:
-        data = default_file.read()
-    exercises = json.loads(data)
+        exercises = json.load(default_file)
     if "exercises" in exercises:
         remove_files()
         check_files()
     # Check if the settings file exists. Create one if it doesn't.
-    settings_file = Path(os.path.join(main_path, "settings.json"))
-    settings_file.touch(exist_ok=True)
+    settings_path = Path(os.path.join(main_path, "settings.json"))
+    settings_path.touch(exist_ok=True)
     if os.path.getsize(os.path.join(main_path, "settings.json")) == 0:
         print("CREATING SETTINGS FILE")
         with open(os.path.join(main_path, "settings.json"), "w") as file:
@@ -98,9 +97,8 @@ def get_stored_workouts():
 
 def get_stored_workout_names():
     with open(os.path.join(path, workout_option_menu.get()) + ".json", "r") as file:
-        data = file.read()
-    print(data)
-    exercises = json.loads(data)
+        exercises = json.load(file)
+    print(str(exercises))
     keys = list(exercises)
     keys.insert(0, "Select workout step")
     return keys
@@ -122,8 +120,7 @@ def theme_option_selection(choice):
 def change_theme(theme):
     print("CHANGING THEME")
     with open(os.path.join(main_path, "settings.json"), "r") as file:
-        data = file.read()
-    settings = json.loads(data)
+        settings = json.load(file)
     settings["theme"] = str(theme)
     with open(os.path.join(main_path, "settings.json"), "w") as outfile:
         json.dump(settings, outfile)
@@ -133,8 +130,7 @@ def change_theme(theme):
 def update_entries():
     print("UPDATING ENTRIES")
     with open(os.path.join(path, workout_option_menu.get()) + ".json", "r") as file:
-        data = file.read()
-    exercises = json.loads(data)
+        exercises = json.load(file)
     key = select_stored_workout_menu.get()
     if key == "Select workout step":
         return
@@ -175,7 +171,7 @@ def view_workout():
         sets_text.configure(text=sets)
         weight_text.configure(text=weight)
     elif len(data) == 0:
-        with open(os.path.join(path, workout_option_menu.get() + ".json"), "w"):
+        with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as file:
             file.write('{}')
         print("ADDED INITIAL JSON DATA TO FILE")
         exercise_text.configure(text="(empty)")
@@ -200,8 +196,7 @@ def add_workout_step():
         messagebox.showerror("PyFit", "sets is not a number")
     else:
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-            data = file.read()
-        exercises = json.loads(data)
+            exercises = json.load(file)
         keys = list(exercises)
         if name in keys:
             messagebox.showerror("PyFit", "Exercise already exists")
@@ -217,8 +212,7 @@ def add_workout_step():
 def remove_workout_step():
     name = select_stored_workout_menu.get()
     with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-        data = file.read()
-    exercises = json.loads(data)
+        exercises = json.load(file)
     if name == "Select workout step":
         messagebox.showerror("PyFit", "No workout step selected")
         return
@@ -246,8 +240,7 @@ def edit_workout_step():
         messagebox.showerror("PyFit", "weight is not a number")
     else:
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-            data = file.read()
-        exercises = json.loads(data)
+            exercises = json.load(file)
         keys = list(exercises)
         if name not in keys:
             messagebox.showerror("PyFit", "You can't change the exercise name")
@@ -310,8 +303,7 @@ def create_exercises_lists():
     info_list = []
     next_step_button.set_text("START")
     with open(os.path.join(path, workout_option_menu.get() + ".json"), "r") as file:
-        data = file.read()
-    exercises = json.loads(data)
+        exercises = json.load(file)
     keys = list(exercises)
     for key in keys:
         for i in range(0, int(exercises[key][1])):
@@ -409,8 +401,7 @@ def showSettings():
     settings_window.configure(bg=("#e2e2e2", "#333333"))
 
     with open(os.path.join(main_path, "settings.json"), "r") as file:
-        data = file.read()
-    settings = json.loads(data)
+        settings = json.load(file)
     theme = settings["theme"]
 
     theme_label = ctk.CTkLabel(master=settings_window, text=f"Choose theme:")

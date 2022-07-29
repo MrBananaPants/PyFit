@@ -367,17 +367,18 @@ def check_for_updates(alert_when_no_update=False):
 
 
 def reset():
-    clear_entries()
-    clear_edit_entries()
-    remove_files()
-    check_files()
-    workout_option_menu.configure(values=get_stored_workouts())
-    workout_option_menu.set(get_stored_workouts()[0])
-    select_stored_workout_menu.configure(values=get_stored_workout_names())
-    select_stored_workout_menu.set(get_stored_workout_names()[0])
-    ctk.set_appearance_mode("dark")
-    app.update()
-    messagebox.showinfo("PyFit", "Reset complete. Custom workouts have been removed.")
+    if messagebox.askyesno("PyFit", f"Are you sure you want to continue? This will remove all custom workout files and reset all settings."):
+        clear_entries()
+        clear_edit_entries()
+        remove_files()
+        check_files()
+        workout_option_menu.configure(values=get_stored_workouts())
+        workout_option_menu.set(get_stored_workouts()[0])
+        select_stored_workout_menu.configure(values=get_stored_workout_names())
+        select_stored_workout_menu.set(get_stored_workout_names()[0])
+        ctk.set_appearance_mode("dark")
+        app.update()
+        messagebox.showinfo("PyFit", "Reset complete")
 
 
 def remove_files():

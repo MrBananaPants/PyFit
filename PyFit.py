@@ -232,7 +232,9 @@ def edit_workout_step():
     reps = edit_reps_entry.get()
     sets = edit_sets_entry.get()
     weight = edit_weight_entry.get()
-    if name == "" or reps == "" or sets == "":
+    if name == "":
+        messagebox.showerror("PyFit", "No workout step selected")
+    elif reps == "" or sets == "":
         messagebox.showerror("PyFit", "One or more of the required fields are empty")
     elif not reps.isnumeric():
         messagebox.showerror("PyFit", "reps is not a number")

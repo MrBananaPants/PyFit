@@ -1,7 +1,6 @@
 import json
 import os
 import shutil
-import tkinter as tk
 import urllib.request
 from pathlib import Path
 from tkinter import messagebox, filedialog
@@ -577,7 +576,7 @@ exercise_text = ctk.CTkLabel(master=viewer_frame, width=250, height=200, text=""
 exercise_text.place(relx=0.15, rely=0.075, anchor=ctk.N)
 
 reps_text = ctk.CTkLabel(master=viewer_frame, width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
-reps_text.place(relx=0.45, rely=0.075, anchor=tk.N)
+reps_text.place(relx=0.45, rely=0.075, anchor=ctk.N)
 
 sets_text = ctk.CTkLabel(master=viewer_frame, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
 sets_text.place(relx=0.65, rely=0.075, anchor=ctk.N)

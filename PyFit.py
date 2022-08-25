@@ -59,19 +59,21 @@ def check_files():
 
 def export_workouts():
     save_path = filedialog.askdirectory(title="Choose export location")
-    shutil.make_archive(os.path.join(save_path, "PyFit_export"), "zip", path)
-    messagebox.showinfo("PyFit", "Export complete")
+    if save_path:
+        shutil.make_archive(os.path.join(save_path, "PyFit_export"), "zip", path)
+        messagebox.showinfo("PyFit", "Export complete")
 
 
 def import_workouts():
     zip_file = filedialog.askopenfilename()
     filename, extension = os.path.splitext(zip_file)
-    if extension != ".zip":
-        messagebox.showerror("PyFit", "Selected file is not a .zip file")
-    else:
-        shutil.unpack_archive(zip_file, path, "zip")
-        messagebox.showinfo("PyFit", "Import complete")
-    workout_option_menu.configure(values=get_stored_workouts())
+    if zip_file:
+        if extension != ".zip":
+            messagebox.showerror("PyFit", "Selected file is not a .zip file")
+        else:
+            shutil.unpack_archive(zip_file, path, "zip")
+            messagebox.showinfo("PyFit", "Import complete")
+        workout_option_menu.configure(values=get_stored_workouts())
 
 
 def create_new_workout_file():

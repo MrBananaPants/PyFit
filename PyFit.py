@@ -676,7 +676,7 @@ sets_label.place(relx=0.65, rely=0.0325, anchor=ctk.CENTER)
 weight_label = ctk.CTkLabel(master=viewer_frame, text="Weight (kg)")
 weight_label.place(relx=0.85, rely=0.0325, anchor=ctk.CENTER)
 
-exercise_text = ctk.CTkLabel(master=viewer_frame, width=200, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left", anchor="w")
+exercise_text = ctk.CTkLabel(master=viewer_frame, width=150, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left", anchor="nw")
 exercise_text.place(relx=0.25, rely=0.075, anchor=ctk.N)
 
 reps_text = ctk.CTkLabel(master=viewer_frame, width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")

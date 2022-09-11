@@ -464,16 +464,19 @@ def showSettings():
     theme_selection.place(relx=0.625, rely=0.1666, anchor=ctk.CENTER)
     theme_selection.set(theme)
 
-    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=update_icon_initial, compound="left", text="Check for updates", command=lambda: check_for_updates(True))
+    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=update_icon_initial, compound="left", text="Check for updates",
+                                             command=lambda: check_for_updates(True))
     check_for_updates_button.place(relx=0.5, rely=0.3332, anchor=ctk.CENTER)
 
-    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=reset_icon_initial, compound ="left", text="Reset app", command=reset)
+    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=reset_icon_initial, compound="left", text="Reset app", command=reset)
     reset_app_button.place(relx=0.5, rely=0.5000, anchor=ctk.CENTER)
 
-    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=import_icon_initial, compound="left", text="Import workouts", command=import_workouts)
+    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=import_icon_initial, compound="left", text="Import workouts",
+                                            command=import_workouts)
     import_exercises_button.place(relx=0.485, rely=0.6666, anchor=ctk.E)
 
-    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=export_icon_initial, compound="left", text="Export workouts", command=export_workouts)
+    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=export_icon_initial, compound="left", text="Export workouts",
+                                            command=export_workouts)
     export_exercises_button.place(relx=0.515, rely=0.6666, anchor=ctk.W)
 
     about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
@@ -588,10 +591,12 @@ workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC",
                                         command=workout_option_menu_selection)
 workout_option_menu.place(relx=0.15, rely=0.085, anchor=ctk.CENTER)
 
-create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Create new workout", command=create_new_workout_file)
+create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Create new workout",
+                                          command=create_new_workout_file)
 create_new_workout_button.place(relx=0.425, rely=0.085, anchor=ctk.CENTER)
 
-remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove", command=remove_workout)
+remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove",
+                                      command=remove_workout)
 remove_workout_button.place(relx=0.66, rely=0.085, anchor=ctk.CENTER)
 
 # Add new step to workout
@@ -612,7 +617,8 @@ weight_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "#5353
                             fg_color=("white", "#414141"), width=292, placeholder_text="Weight (leave blank for no weight)")
 weight_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
 
-add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Add step", command=add_workout_step)
+add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Add step",
+                                command=add_workout_step)
 add_step_button.place(relx=0.03, rely=0.41, anchor=ctk.W)
 
 # Edit or remove workout step
@@ -646,14 +652,16 @@ edit_weight_entry.place(relx=0.03, rely=0.735, anchor=ctk.W)
 edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=edit_icon_initial, compound="left", text="Edit step", command=edit_workout_step)
 edit_step_button.place(relx=0.03, rely=0.785, anchor=ctk.W)
 
-remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove step", command=remove_workout_step)
+remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove step",
+                                   command=remove_workout_step)
 remove_step_button.place(relx=0.2825, rely=0.785, anchor=ctk.W)
 
 settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=settings_icon_initial, compound="left", text="Settings", command=showSettings)
 settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
 settings_button.image = icon_theme
 
-start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon_initial, compound="left", text="Start workout", command=raise_workout_frame)
+start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon_initial, compound="left", text="Start workout",
+                                     command=raise_workout_frame)
 start_workout_button.place(relx=0.65, rely=0.925, anchor=ctk.CENTER)
 
 select_workout_label = ctk.CTkLabel(master=viewer_frame, text="Exercise")

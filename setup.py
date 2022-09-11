@@ -8,7 +8,7 @@ Usage:
 from setuptools import setup
 
 APP = ['PyFit.py']
-DATA_FILES = []
+DATA_FILES = [('', ['media'])]
 OPTIONS = {
     'iconfile': 'media/icon.icns',
     'plist': {'CFBundleShortVersionString': '0.5.1', },

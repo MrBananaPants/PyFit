@@ -3,6 +3,7 @@ import os
 import shutil
 import urllib.request
 from pathlib import Path
+from subprocess import call
 from tkinter import messagebox, filedialog
 
 import PIL.Image
@@ -413,6 +414,11 @@ def check_for_updates(alert_when_no_update=False):
                 urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
                                            os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
+            if os.name == 'nt':
+                os.startfile(save_path)
+            else:
+                call(["open", "-R", os.path.join(save_path, "PyFit.dmg")])
+
     elif alert_when_no_update:
         messagebox.showinfo("PyFit", "You already have the latest version installed")
 

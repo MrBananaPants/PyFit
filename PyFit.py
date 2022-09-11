@@ -5,8 +5,10 @@ import urllib.request
 from pathlib import Path
 from tkinter import messagebox, filedialog
 
+import PIL.Image
 import customtkinter as ctk
 import requests
+from PIL import Image, ImageTk
 
 if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")
@@ -22,6 +24,11 @@ exercise_index = 0
 info_index = 0
 exercise_list = []
 info_list = []
+
+import_exercises_button = ctk.CTkButton
+export_exercises_button = ctk.CTkButton
+check_for_updates_button = ctk.CTkButton
+reset_app_button = ctk.CTkButton
 
 
 def check_files():
@@ -122,13 +129,54 @@ def theme_option_selection(choice):
 
 
 def change_theme(theme):
-    print("CHANGING THEME")
+    print(f"CHANGING THEME TO {theme}")
     with open(os.path.join(main_path, "settings.json"), "r") as file:
         settings = json.load(file)
     settings["theme"] = str(theme)
     with open(os.path.join(main_path, "settings.json"), "w") as outfile:
         json.dump(settings, outfile)
+    update_button_icons(str(theme).lower())
     ctk.set_appearance_mode(str(theme).lower())
+
+
+def update_button_icons(theme):
+    global import_exercises_button
+    global export_exercises_button
+    global check_for_updates_button
+    global reset_app_button
+    if theme == "dark":
+        button_theme = "white"
+    else:
+        button_theme = "black"
+
+    if settings_button.image != button_theme:
+        if settings_button.image == "white":
+            settings_button.configure(image=settings_icon_black)
+            start_workout_button.configure(image=dumbbell_icon_black)
+            edit_step_button.configure(image=edit_icon_black)
+            import_exercises_button.configure(image=import_icon_black)
+            export_exercises_button.configure(image=export_icon_black)
+            remove_step_button.configure(image=delete_icon_black)
+            remove_workout_button.configure(image=delete_icon_black)
+            check_for_updates_button.configure(image=update_icon_black)
+            reset_app_button.configure(image=reset_icon_black)
+            create_new_workout_button.configure(image=add_icon_black)
+            add_step_button.configure(image=add_icon_black)
+            settings_button.image = "black"
+
+        else:
+            settings_button.configure(image=settings_icon_white)
+            start_workout_button.configure(image=dumbbell_icon_white)
+            edit_step_button.configure(image=edit_icon_white)
+            import_exercises_button.configure(image=import_icon_white)
+            export_exercises_button.configure(image=export_icon_white)
+            remove_step_button.configure(image=delete_icon_white)
+            remove_workout_button.configure(image=delete_icon_white)
+            check_for_updates_button.configure(image=update_icon_white)
+            reset_app_button.configure(image=reset_icon_white)
+            create_new_workout_button.configure(image=add_icon_white)
+            add_step_button.configure(image=add_icon_white)
+            settings_button.image = "white"
 
 
 def update_entries():
@@ -389,6 +437,10 @@ def remove_files():
 
 
 def showSettings():
+    global import_exercises_button
+    global export_exercises_button
+    global check_for_updates_button
+    global reset_app_button
     settings_window = ctk.CTkToplevel()
 
     settings_width = 400
@@ -412,16 +464,16 @@ def showSettings():
     theme_selection.place(relx=0.625, rely=0.1666, anchor=ctk.CENTER)
     theme_selection.set(theme)
 
-    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Check for updates", command=lambda: check_for_updates(True))
+    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=update_icon_initial, compound="left", text="Check for updates", command=lambda: check_for_updates(True))
     check_for_updates_button.place(relx=0.5, rely=0.3332, anchor=ctk.CENTER)
 
-    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Reset app", command=reset)
+    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=reset_icon_initial, compound ="left", text="Reset app", command=reset)
     reset_app_button.place(relx=0.5, rely=0.5000, anchor=ctk.CENTER)
 
-    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Import workouts", command=import_workouts)
+    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=import_icon_initial, compound="left", text="Import workouts", command=import_workouts)
     import_exercises_button.place(relx=0.485, rely=0.6666, anchor=ctk.E)
 
-    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", text="Export workouts", command=export_workouts)
+    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=export_icon_initial, compound="left", text="Export workouts", command=export_workouts)
     export_exercises_button.place(relx=0.515, rely=0.6666, anchor=ctk.W)
 
     about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
@@ -474,7 +526,50 @@ with open(os.path.join(main_path, "settings.json")) as settings_file:
 
 print(f'setting theme to {str(settings_data["theme"]).lower()}')
 ctk.set_appearance_mode(str(settings_data["theme"]).lower())
+
+if str(settings_data["theme"].lower()) == "dark":
+    icon_theme = "white"
+else:
+    icon_theme = "black"
+
 app.configure(bg=("#f2f2f2", "#202020"))
+
+# Initialize icons
+settings_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/settings_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+settings_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/settings_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+settings_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/settings_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+dumbbell_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/dumbbell_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+dumbbell_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/dumbbell_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+dumbbell_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/dumbbell_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+edit_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/edit_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+edit_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/edit_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+edit_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/edit_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+export_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/export_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+export_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/export_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+export_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/export_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+import_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/import_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+import_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/import_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+import_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/import_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+delete_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/delete_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+delete_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/delete_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+delete_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/delete_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+update_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/update_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+update_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/update_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+update_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/update_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+reset_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/reset_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+reset_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/reset_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+reset_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/reset_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
+add_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/add_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+add_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/add_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+add_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/add_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
 
 # mainFrame view
 main_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))
@@ -493,11 +588,11 @@ workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC",
                                         command=workout_option_menu_selection)
 workout_option_menu.place(relx=0.15, rely=0.085, anchor=ctk.CENTER)
 
-create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Create new workout", command=create_new_workout_file)
-create_new_workout_button.place(relx=0.40, rely=0.085, anchor=ctk.CENTER)
+create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Create new workout", command=create_new_workout_file)
+create_new_workout_button.place(relx=0.425, rely=0.085, anchor=ctk.CENTER)
 
-remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", text="Remove", command=remove_workout)
-remove_workout_button.place(relx=0.60, rely=0.085, anchor=ctk.CENTER)
+remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove", command=remove_workout)
+remove_workout_button.place(relx=0.66, rely=0.085, anchor=ctk.CENTER)
 
 # Add new step to workout
 add_new_step_label = ctk.CTkLabel(master=action_frame, text="Add new step to workout: ")
@@ -517,7 +612,7 @@ weight_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "#5353
                             fg_color=("white", "#414141"), width=292, placeholder_text="Weight (leave blank for no weight)")
 weight_entry.place(relx=0.03, rely=0.36, anchor=ctk.W)
 
-add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", text="Add step", command=add_workout_step)
+add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", image=add_icon_initial, compound="left", text="Add step", command=add_workout_step)
 add_step_button.place(relx=0.03, rely=0.41, anchor=ctk.W)
 
 # Edit or remove workout step
@@ -548,16 +643,17 @@ edit_weight_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "
                                  width=292, placeholder_text="Weight (no weight for selected step)")
 edit_weight_entry.place(relx=0.03, rely=0.735, anchor=ctk.W)
 
-edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Edit step", command=edit_workout_step)
+edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=edit_icon_initial, compound="left", text="Edit step", command=edit_workout_step)
 edit_step_button.place(relx=0.03, rely=0.785, anchor=ctk.W)
 
-remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Remove step", command=remove_workout_step)
+remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=delete_icon_initial, compound="left", text="Remove step", command=remove_workout_step)
 remove_step_button.place(relx=0.2825, rely=0.785, anchor=ctk.W)
 
-settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Settings", command=showSettings)
+settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=settings_icon_initial, compound="left", text="Settings", command=showSettings)
 settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
+settings_button.image = icon_theme
 
-start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", text="Start workout", command=raise_workout_frame)
+start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon_initial, compound="left", text="Start workout", command=raise_workout_frame)
 start_workout_button.place(relx=0.65, rely=0.925, anchor=ctk.CENTER)
 
 select_workout_label = ctk.CTkLabel(master=viewer_frame, text="Exercise")

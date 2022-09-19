@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import urllib.request
+import webbrowser
 from pathlib import Path
 from subprocess import call
 from tkinter import messagebox, filedialog
@@ -407,17 +408,21 @@ def check_for_updates(alert_when_no_update=False):
     if latest_version > current_version:
         if messagebox.askyesno("PyFit", f"An update is available (v{latest_version_formatted}). Do you want to download this update?"):
             save_path = filedialog.askdirectory(title="Select save location")
-            if os.name == 'nt':
-                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.exe",
-                                           os.path.join(save_path, "PyFit.exe"))
-            else:
-                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
-                                           os.path.join(save_path, "PyFit.dmg"))
-            messagebox.showinfo("PyFit", "The latest version has been downloaded")
-            if os.name == 'nt':
-                os.startfile(save_path)
-            else:
-                call(["open", "-R", os.path.join(save_path, "PyFit.dmg")])
+            try:
+                if os.name == 'nt':
+                    urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.exe",
+                                               os.path.join(save_path, "PyFit.exe"))
+                    messagebox.showinfo("PyFit", "The latest version has been downloaded")
+                    os.startfile(save_path)
+                else:
+                    urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
+                                               os.path.join(save_path, "PyFit.dmg"))
+                    messagebox.showinfo("PyFit", "The latest version has been downloaded")
+                    call(["open", "-R", os.path.join(save_path, "PyFit.dmg")])
+
+            except urllib.error.HTTPError:
+                messagebox.showerror("PyFit", "Cannot download latest version. Press OK to manually download the newest version")
+                webbrowser.open('https://github.com/MrBananaPants/PyFit/releases/latest', new=2)
 
     elif alert_when_no_update:
         messagebox.showinfo("PyFit", "You already have the latest version installed")

@@ -411,7 +411,7 @@ def check_for_updates(alert_when_no_update=False):
                 urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.exe",
                                            os.path.join(save_path, "PyFit.exe"))
             else:
-                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.zip",
+                urllib.request.urlretrieve(f"https://github.com/MrBananaPants/PyFit/releases/download/{latest_version_formatted}/PyFit.dmg",
                                            os.path.join(save_path, "PyFit.dmg"))
             messagebox.showinfo("PyFit", "The latest version has been downloaded")
             if os.name == 'nt':

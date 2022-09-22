@@ -27,6 +27,7 @@ info_index = 0
 exercise_list = []
 info_list = []
 
+
 def check_files():
     # Check whether the specified path exists or not
     if not os.path.exists(path):
@@ -371,6 +372,11 @@ def check_for_updates(alert_when_no_update=False):
     tag = requests.get("https://api.github.com/repos/MrBananaPants/PyFit/releases/latest").text
     tag = json.loads(tag)
     print(str(tag))
+    if "API rate limit" in str(tag):
+        if alert_when_no_update:
+            messagebox.showerror("PyFit", "API rate limit exceeded, press OK to manually download the newest version")
+            webbrowser.open('https://github.com/MrBananaPants/PyFit/releases/latest', new=2)
+        return None
     latest_version = int(str(tag["tag_name"]).lstrip('0').replace(".", ""))
     current_version = int(str(version).lstrip('0').replace(".", ""))
     latest_version_formatted = str(tag["tag_name"])

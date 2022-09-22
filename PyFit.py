@@ -27,12 +27,6 @@ info_index = 0
 exercise_list = []
 info_list = []
 
-import_exercises_button = ctk.CTkButton
-export_exercises_button = ctk.CTkButton
-check_for_updates_button = ctk.CTkButton
-reset_app_button = ctk.CTkButton
-
-
 def check_files():
     # Check whether the specified path exists or not
     if not os.path.exists(path):
@@ -142,10 +136,6 @@ def change_theme(theme):
 
 
 def update_button_icons(theme):
-    global import_exercises_button
-    global export_exercises_button
-    global check_for_updates_button
-    global reset_app_button
     if theme == "dark":
         button_theme = "white"
     else:
@@ -322,25 +312,6 @@ def remove_workout():
     messagebox.showinfo("PyFit", f'"{name}" has been removed')
 
 
-def raise_main_frame():
-    main_frame.pack(anchor="w", fill="both", expand=True)
-    workout_frame.pack_forget()
-
-
-def raise_workout_frame():
-    data = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
-    if str(data) != "{}":
-        progressbar.set(0)
-        select_workout_label.configure(text="Press START to begin")
-        info_label.configure(text="")
-        next_step_button.set_text("START")
-        workout_frame.pack(anchor="w", fill="both", expand=True)
-        main_frame.pack_forget()
-        create_exercises_lists()
-    else:
-        messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
-
-
 def create_exercises_lists():
     global exercise_index
     global info_index
@@ -385,7 +356,7 @@ def next_step():
     progressbar.set(info_index / len(exercise_list))
     next_step_button.set_text("Next step")
     if info_index == len(info_list):
-        return_to_main()
+        raise_main_frame()
         return
     select_workout_label.configure(text=exercise_list[exercise_index])
     exercise_index += 1
@@ -447,53 +418,6 @@ def remove_files():
     shutil.rmtree(main_path)
 
 
-def showSettings():
-    global import_exercises_button
-    global export_exercises_button
-    global check_for_updates_button
-    global reset_app_button
-    settings_window = ctk.CTkToplevel()
-
-    settings_width = 400
-    settings_height = 225
-
-    settings_spawn_x = int((width_screen / 2) - (settings_width / 2))
-    settings_spawn_y = int((height_screen / 2) - (settings_height / 2))
-
-    settings_window.geometry(f"{settings_width}x{settings_height}+{settings_spawn_x}+{settings_spawn_y}")
-    settings_window.title("Settings")
-    settings_window.configure(bg=("#e2e2e2", "#333333"))
-
-    with open(os.path.join(main_path, "settings.json"), "r") as file:
-        settings = json.load(file)
-    theme = settings["theme"]
-
-    theme_label = ctk.CTkLabel(master=settings_window, text=f"Choose theme:")
-    theme_label.place(relx=0.3, rely=0.1666, anchor=ctk.CENTER)
-    theme_selection = ctk.CTkOptionMenu(master=settings_window, fg_color="#3C99DC", dynamic_resizing=False, values=["Light", "Dark", "System"],
-                                        command=theme_option_selection)
-    theme_selection.place(relx=0.625, rely=0.1666, anchor=ctk.CENTER)
-    theme_selection.set(theme)
-
-    check_for_updates_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=update_icon_initial, compound="left", text="Check for updates",
-                                             command=lambda: check_for_updates(True))
-    check_for_updates_button.place(relx=0.5, rely=0.3332, anchor=ctk.CENTER)
-
-    reset_app_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=reset_icon_initial, compound="left", text="Reset app", command=reset)
-    reset_app_button.place(relx=0.5, rely=0.5000, anchor=ctk.CENTER)
-
-    import_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=import_icon_initial, compound="left", text="Import workouts",
-                                            command=import_workouts)
-    import_exercises_button.place(relx=0.485, rely=0.6666, anchor=ctk.E)
-
-    export_exercises_button = ctk.CTkButton(master=settings_window, fg_color="#3C99DC", image=export_icon_initial, compound="left", text="Export workouts",
-                                            command=export_workouts)
-    export_exercises_button.place(relx=0.515, rely=0.6666, anchor=ctk.W)
-
-    about_label = ctk.CTkLabel(master=settings_window, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
-    about_label.place(relx=0.5, rely=0.86, anchor=ctk.CENTER)
-
-
 def clear_entries():
     name_exercise_entry.delete(0, 'end')
     reps_entry.delete(0, 'end')
@@ -508,8 +432,33 @@ def clear_edit_entries():
     edit_weight_entry.delete(0, 'end')
 
 
-def return_to_main():
-    raise_main_frame()
+def raise_main_frame():
+    main_frame.pack(anchor="w", fill="both", expand=True)
+    workout_frame.pack_forget()
+
+
+def return_to_main_from_settings():
+    action_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pady=20)
+    settings_frame.pack_forget()
+
+
+def raise_workout_frame():
+    data = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
+    if str(data) != "{}":
+        progressbar.set(0)
+        select_workout_label.configure(text="Press START to begin")
+        info_label.configure(text="")
+        next_step_button.set_text("START")
+        workout_frame.pack(anchor="w", fill="both", expand=True)
+        main_frame.pack_forget()
+        create_exercises_lists()
+    else:
+        messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
+
+
+def raise_settings_frame():
+    settings_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pady=20)
+    action_frame.pack_forget()
 
 
 def main():
@@ -667,7 +616,8 @@ remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", imag
                                    command=remove_workout_step)
 remove_step_button.place(relx=0.2825, rely=0.785, anchor=ctk.W)
 
-settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=settings_icon_initial, compound="left", text="Settings", command=showSettings)
+settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=settings_icon_initial, compound="left", text="Settings",
+                                command=raise_settings_frame)
 settings_button.place(relx=0.35, rely=0.925, anchor=ctk.CENTER)
 settings_button.image = icon_theme
 
@@ -713,8 +663,55 @@ info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=next_step)
 next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
-return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18), command=return_to_main)
+return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18),
+                              command=raise_main_frame)
 return_button.place(relx=0.0375, rely=0.055, anchor=ctk.CENTER)
+
+# SettingsFrame view
+settings_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10)
+
+settings_label = ctk.CTkLabel(master=settings_frame, text=f"Settings", text_font=('Segoe UI', 40))
+settings_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
+
+theme_selection_default = str(settings_data["theme"]).lower()
+
+select_theme_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Choose theme: ")
+select_theme_label.place(relx=0, rely=0.125, anchor=ctk.W)
+
+theme_selection = ctk.CTkOptionMenu(master=settings_frame, fg_color="#3C99DC", dynamic_resizing=False, values=["Light", "Dark", "System"],
+                                    command=theme_option_selection)
+theme_selection.place(relx=0.15, rely=0.175, anchor=ctk.CENTER)
+theme_selection.set(theme_selection_default)
+
+check_for_updates_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Check for updates:")
+check_for_updates_label.place(relx=0.015, rely=0.250, anchor=ctk.W)
+
+check_for_updates_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=update_icon_initial, compound="left", text="Check for updates",
+                                         command=lambda: check_for_updates(True))
+check_for_updates_button.place(relx=0.165, rely=0.3, anchor=ctk.CENTER)
+
+reset_app_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Reset to factory settings:")
+reset_app_label.place(relx=0.0325, rely=0.375, anchor=ctk.W)
+
+reset_app_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=reset_icon_initial, compound="left", text="Reset app", command=reset)
+reset_app_button.place(relx=0.15, rely=0.425, anchor=ctk.CENTER)
+
+import_export_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Import or export workouts:")
+import_export_label.place(relx=0.0325, rely=0.500, anchor=ctk.W)
+
+import_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=import_icon_initial, compound="left", text="Import workouts",
+                                        command=import_workouts)
+import_exercises_button.place(relx=0.1525, rely=0.550, anchor=ctk.CENTER)
+# relx=0,03
+export_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=export_icon_initial, compound="left", text="Export workouts",
+                                        command=export_workouts)
+export_exercises_button.place(relx=0.415, rely=0.550, anchor=ctk.CENTER)
+
+about_label = ctk.CTkLabel(master=settings_frame, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
+about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
+
+return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", text="Return", command=return_to_main_from_settings)
+return_to_main_button.place(relx=0.08, rely=0.035, anchor=ctk.CENTER)
 
 if __name__ == "__main__":
     main()

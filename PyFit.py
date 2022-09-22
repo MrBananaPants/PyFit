@@ -81,6 +81,8 @@ def import_workouts():
 
 def create_new_workout_file():
     dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
+    if dialog.get_input() is None:
+        return
     filename = str(dialog.get_input()) + ".json"
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))
@@ -99,7 +101,7 @@ def get_stored_workouts():
     return found_workouts_not_hidden
 
 
-def get_stored_workout_names():
+def get_workout_steps_names():
     exercises = get_workout_data(os.path.join(path, workout_option_menu.get()) + ".json")
     print(str(exercises))
     keys = list(exercises)
@@ -177,7 +179,7 @@ def update_button_icons(theme):
 def update_entries():
     print("UPDATING ENTRIES")
     exercises = get_workout_data(os.path.join(path, workout_option_menu.get()) + ".json")
-    key = select_stored_workout_menu.get()
+    key = select_workout_step_menu.get()
     if key == "Select workout step":
         return
     clear_edit_entries()
@@ -225,8 +227,8 @@ def view_workout():
     else:
         exercise_text.configure(text="(empty)")
     clear_edit_entries()
-    select_stored_workout_menu.configure(values=get_stored_workout_names())
-    select_stored_workout_menu.set(get_stored_workout_names()[0])
+    select_workout_step_menu.configure(values=get_workout_steps_names())
+    select_workout_step_menu.set(get_workout_steps_names()[0])
 
 
 def add_workout_step():
@@ -251,11 +253,11 @@ def add_workout_step():
             json.dump(exercises, outfile)
         view_workout()
         clear_entries()
-        select_stored_workout_menu.configure(values=get_stored_workout_names())
+        select_workout_step_menu.configure(values=get_workout_steps_names())
 
 
 def remove_workout_step():
-    name = select_stored_workout_menu.get()
+    name = select_workout_step_menu.get()
     exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
     if name == "Select workout step":
         messagebox.showerror("PyFit", "No workout step selected")
@@ -265,8 +267,8 @@ def remove_workout_step():
         json.dump(exercises, outfile)
     view_workout()
     clear_edit_entries()
-    select_stored_workout_menu.configure(values=get_stored_workout_names())
-    select_stored_workout_menu.set(get_stored_workout_names()[0])
+    select_workout_step_menu.configure(values=get_workout_steps_names())
+    select_workout_step_menu.set(get_workout_steps_names()[0])
 
 
 def edit_workout_step():
@@ -290,15 +292,15 @@ def edit_workout_step():
         if name not in keys:
             messagebox.showerror("PyFit", "You can't change the exercise name")
             edit_name_exercise_entry.delete(0, 'end')
-            edit_name_exercise_entry.insert(0, select_stored_workout_menu.get())
+            edit_name_exercise_entry.insert(0, select_workout_step_menu.get())
             return
         exercises[name] = [str(reps), str(sets), str(weight)]
         with open(os.path.join(path, workout_option_menu.get() + ".json"), "w") as outfile:
             json.dump(exercises, outfile)
         view_workout()
         clear_edit_entries()
-        select_stored_workout_menu.configure(values=get_stored_workout_names())
-        select_stored_workout_menu.set(get_stored_workout_names()[0])
+        select_workout_step_menu.configure(values=get_workout_steps_names())
+        select_workout_step_menu.set(get_workout_steps_names()[0])
 
 
 def remove_workout():
@@ -415,8 +417,8 @@ def reset():
         check_files()
         workout_option_menu.configure(values=get_stored_workouts())
         workout_option_menu.set(get_stored_workouts()[0])
-        select_stored_workout_menu.configure(values=get_stored_workout_names())
-        select_stored_workout_menu.set(get_stored_workout_names()[0])
+        select_workout_step_menu.configure(values=get_workout_steps_names())
+        select_workout_step_menu.set(get_workout_steps_names()[0])
         return_to_main_from_settings()
         ctk.set_appearance_mode("dark")
         update_button_icons("dark")
@@ -603,9 +605,9 @@ add_step_button.place(relx=0.03, rely=0.47, anchor=ctk.W)
 edit_remove_step_label = ctk.CTkLabel(master=action_frame, text="Edit or remove step: ")
 edit_remove_step_label.place(relx=0.0175, rely=0.545, anchor=ctk.W)
 
-select_stored_workout_menu = ctk.CTkOptionMenu(master=action_frame, width=292, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workout_names(),
-                                               command=stored_workout_menu_selection)
-select_stored_workout_menu.place(relx=0.03, rely=0.595, anchor=ctk.W)
+select_workout_step_menu = ctk.CTkOptionMenu(master=action_frame, width=292, fg_color="#3C99DC", dynamic_resizing=False, values=get_workout_steps_names(),
+                                             command=stored_workout_menu_selection)
+select_workout_step_menu.place(relx=0.03, rely=0.595, anchor=ctk.W)
 
 edit_name_exercise_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
                                         text_color=("black", "white"),
@@ -728,7 +730,8 @@ export_exercises_button.place(relx=0.415, rely=0.52, anchor=ctk.CENTER)
 about_label = ctk.CTkLabel(master=settings_frame, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
 about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
 
-return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", image=back_icon_initial, compound="left", text="Return", command=return_to_main_from_settings)
+return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", image=back_icon_initial, compound="left", text="Return",
+                                      command=return_to_main_from_settings)
 return_to_main_button.place(relx=0.09, rely=0.035, anchor=ctk.CENTER)
 
 if __name__ == "__main__":

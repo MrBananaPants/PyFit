@@ -412,6 +412,7 @@ def reset():
         ctk.set_appearance_mode("dark")
         app.update()
         messagebox.showinfo("PyFit", "Reset complete")
+        return_to_main_from_settings()
 
 
 def remove_files():

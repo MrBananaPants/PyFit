@@ -428,6 +428,7 @@ def reset():
         update_button_icons("dark")
         theme_selection.set("Dark")
         app.update()
+        view_workout()
         messagebox.showinfo("PyFit", "Reset complete")
 
 

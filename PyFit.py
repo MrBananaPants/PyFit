@@ -81,9 +81,10 @@ def import_workouts():
 
 def create_new_workout_file():
     dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
-    if dialog.get_input() is None:
+    dialog_input = dialog.get_input()
+    if dialog_input is None:
         return
-    filename = str(dialog.get_input()) + ".json"
+    filename = str(dialog_input + ".json")
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))
     workout_file.touch(exist_ok=True)

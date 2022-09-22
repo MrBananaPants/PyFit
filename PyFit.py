@@ -465,7 +465,7 @@ def raise_settings_frame():
 
 
 def main():
-    # check_for_updates(False)
+    check_for_updates(False)
     view_workout()
     app.mainloop()
 

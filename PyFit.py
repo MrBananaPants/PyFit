@@ -409,10 +409,12 @@ def reset():
         workout_option_menu.set(get_stored_workouts()[0])
         select_stored_workout_menu.configure(values=get_stored_workout_names())
         select_stored_workout_menu.set(get_stored_workout_names()[0])
+        return_to_main_from_settings()
         ctk.set_appearance_mode("dark")
+        update_button_icons("dark")
+        theme_selection.set("Dark")
         app.update()
         messagebox.showinfo("PyFit", "Reset complete")
-        return_to_main_from_settings()
 
 
 def remove_files():
@@ -674,7 +676,7 @@ settings_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333")
 settings_label = ctk.CTkLabel(master=settings_frame, text=f"Settings", text_font=('Segoe UI', 40))
 settings_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
 
-theme_selection_default = str(settings_data["theme"]).lower()
+theme_selection_default = str(settings_data["theme"])
 
 select_theme_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Choose theme: ")
 select_theme_label.place(relx=0, rely=0.125, anchor=ctk.W)

@@ -90,6 +90,7 @@ def create_new_workout_file():
     workout_file.touch(exist_ok=True)
     workout_option_menu.configure(values=get_stored_workouts())
     workout_option_menu.set(filename.replace(".json", ""))
+    view_workout()
 
 
 def get_stored_workouts():

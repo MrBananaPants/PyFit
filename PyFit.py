@@ -155,6 +155,7 @@ def update_button_icons(theme):
             reset_app_button.configure(image=reset_icon_black)
             create_new_workout_button.configure(image=add_icon_black)
             add_step_button.configure(image=add_icon_black)
+            return_to_main_button.configure(image=back_icon_black)
             settings_button.image = "black"
 
         else:
@@ -169,6 +170,7 @@ def update_button_icons(theme):
             reset_app_button.configure(image=reset_icon_white)
             create_new_workout_button.configure(image=add_icon_white)
             add_step_button.configure(image=add_icon_white)
+            return_to_main_button.configure(image=back_icon_white)
             settings_button.image = "white"
 
 
@@ -543,6 +545,10 @@ add_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/add_{icon_theme}.
 add_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/add_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
 add_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/add_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
 
+back_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/back_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+back_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/back_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+back_icon_black = ImageTk.PhotoImage(Image.open(f"media/icons/back_black.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
+
 # mainFrame view
 main_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))
 main_frame.pack(anchor="w", fill="both", expand=True)
@@ -722,8 +728,8 @@ export_exercises_button.place(relx=0.415, rely=0.52, anchor=ctk.CENTER)
 about_label = ctk.CTkLabel(master=settings_frame, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
 about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
 
-return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", text="Return", command=return_to_main_from_settings)
-return_to_main_button.place(relx=0.08, rely=0.035, anchor=ctk.CENTER)
+return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", image=back_icon_initial, compound="left", text="Return", command=return_to_main_from_settings)
+return_to_main_button.place(relx=0.09, rely=0.035, anchor=ctk.CENTER)
 
 if __name__ == "__main__":
     main()

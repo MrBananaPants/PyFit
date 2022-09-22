@@ -107,7 +107,6 @@ def get_workout_steps_names():
     exercises = get_workout_data(os.path.join(path, workout_option_menu.get()) + ".json")
     print(str(exercises))
     keys = list(exercises)
-    keys.insert(0, "Select workout step")
     return keys
 
 
@@ -230,7 +229,7 @@ def view_workout():
         exercise_text.configure(text="(empty)")
     clear_edit_entries()
     select_workout_step_menu.configure(values=get_workout_steps_names())
-    select_workout_step_menu.set(get_workout_steps_names()[0])
+    select_workout_step_menu.set("Select workout step")
 
 
 def add_workout_step():
@@ -270,7 +269,7 @@ def remove_workout_step():
     view_workout()
     clear_edit_entries()
     select_workout_step_menu.configure(values=get_workout_steps_names())
-    select_workout_step_menu.set(get_workout_steps_names()[0])
+    select_workout_step_menu.set("Select workout step")
 
 
 def edit_workout_step():
@@ -302,7 +301,7 @@ def edit_workout_step():
         view_workout()
         clear_edit_entries()
         select_workout_step_menu.configure(values=get_workout_steps_names())
-        select_workout_step_menu.set(get_workout_steps_names()[0])
+        select_workout_step_menu.set("Select workout step")
 
 
 def remove_workout():

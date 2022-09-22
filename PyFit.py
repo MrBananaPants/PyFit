@@ -84,6 +84,8 @@ def create_new_workout_file():
     dialog_input = dialog.get_input()
     if dialog_input is None or dialog_input == "":
         return
+    if str(dialog_input).lower() in get_stored_workouts():
+        messagebox.showerror("PyFit", "Workout with this name already exists")
     filename = str(dialog_input + ".json")
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))

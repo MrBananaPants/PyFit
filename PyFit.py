@@ -317,6 +317,7 @@ def remove_workout():
     workout_option_menu.set(get_stored_workouts()[0])
     app.update()
     messagebox.showinfo("PyFit", f'"{name}" has been removed')
+    view_workout()
 
 
 def create_exercises_lists():

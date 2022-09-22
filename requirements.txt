@@ -1,4 +1,4 @@
-customtkinter==4.5.10
+customtkinter==4.6.3
 setuptools==65.3.0
 Pillow~=9.2.0
 requests~=2.28.1

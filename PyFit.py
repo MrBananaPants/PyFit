@@ -21,7 +21,7 @@ else:
     main_path = os.path.join(os.getenv("HOME"), "PyFit")
 
 # Global variables
-version = "0.5.3"
+version = "0.6.0"
 exercise_index = 0
 info_index = 0
 exercise_list = []

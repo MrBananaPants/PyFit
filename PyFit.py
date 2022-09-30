@@ -6,6 +6,7 @@ import webbrowser
 from pathlib import Path
 from subprocess import call
 from tkinter import messagebox, filedialog
+import http.client as httplib
 
 import PIL.Image
 import customtkinter as ctk
@@ -375,8 +376,25 @@ def next_step():
         next_step_button.set_text("Finish")
 
 
+def check_connection():
+    connection = httplib.HTTPConnection("www.github.com", timeout=5)
+    try:
+        # only header requested for fast operation
+        connection.request("HEAD", "/")
+        connection.close()
+        print("Internet On")
+        return True
+    except Exception as exep:
+        print(exep)
+        return False
+
+
 def check_for_updates(alert_when_no_update=False):
     print("CHECKING FOR UPDATES")
+    if not check_connection():
+        if alert_when_no_update:
+            messagebox.showerror("PyFit", "Unable to check for updates: no internet connection")
+        return
     tag = requests.get("https://api.github.com/repos/MrBananaPants/PyFit/releases/latest").text
     tag = json.loads(tag)
     print(str(tag))

@@ -398,7 +398,7 @@ def check_for_updates(alert_when_no_update=False):
     tag = requests.get("https://api.github.com/repos/MrBananaPants/PyFit/releases/latest").text
     tag = json.loads(tag)
     print(str(tag))
-    if "API rate limit" in str(tag):
+    if list(tag)[0] != "url":
         if alert_when_no_update:
             messagebox.showerror("PyFit", "API rate limit exceeded, press OK to manually download the newest version")
             webbrowser.open('https://github.com/MrBananaPants/PyFit/releases/latest', new=2)

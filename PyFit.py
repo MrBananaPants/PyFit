@@ -85,8 +85,12 @@ def create_new_workout_file():
     dialog_input = dialog.get_input()
     if dialog_input is None or dialog_input == "":
         return
+    if len(dialog_input) > 100:
+        messagebox.showerror("PyFit", "Workout name too long")
+        return
     if str(dialog_input).lower() in get_stored_workouts():
         messagebox.showerror("PyFit", "Workout with this name already exists")
+        return
     filename = str(dialog_input + ".json")
     print("filename = " + filename)
     workout_file = Path(os.path.join(path, filename))

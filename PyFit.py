@@ -372,7 +372,7 @@ def next_step():
     if info_index == len(info_list):
         raise_main_frame()
         return
-    select_workout_label.configure(text=exercise_list[exercise_index])
+    current_workout_step_label.configure(text=exercise_list[exercise_index])
     exercise_index += 1
     info_label.configure(text=info_list[info_index])
     info_index += 1
@@ -486,7 +486,7 @@ def raise_workout_frame():
     data = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
     if str(data) != "{}":
         progressbar.set(0)
-        select_workout_label.configure(text="Press START to begin")
+        current_workout_step_label.configure(text="Press START to begin")
         info_label.configure(text="")
         next_step_button.set_text("START")
         workout_frame.pack(anchor="w", fill="both", expand=True)
@@ -672,8 +672,8 @@ start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", im
                                      command=raise_workout_frame)
 start_workout_button.place(relx=0.5, rely=0.935, anchor=ctk.CENTER)
 
-select_workout_label = ctk.CTkLabel(master=viewer_frame, text="Exercise")
-select_workout_label.place(relx=0.20, rely=0.0325, anchor=ctk.CENTER)
+workout_label = ctk.CTkLabel(master=viewer_frame, text="Exercise")
+workout_label.place(relx=0.20, rely=0.0325, anchor=ctk.CENTER)
 
 reps_label = ctk.CTkLabel(master=viewer_frame, text="Reps")
 reps_label.place(relx=0.45, rely=0.0325, anchor=ctk.CENTER)
@@ -702,8 +702,8 @@ workout_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))
 progressbar = ctk.CTkProgressBar(master=workout_frame, fg_color=("#e2e2e2", "#333333"), progress_color="#3C99DC", height=15, width=app.winfo_width())
 progressbar.place(relx=0.5, rely=0, anchor=ctk.N)
 
-select_workout_label = ctk.CTkLabel(workout_frame, text="Press START to begin", text_font=('Segoe UI', 100))
-select_workout_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
+current_workout_step_label = ctk.CTkLabel(workout_frame, text="Press START to begin", text_font=('Segoe UI', 100))
+current_workout_step_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
 info_label = ctk.CTkLabel(workout_frame, text="", text_font=('Segoe UI', 50))
 info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 

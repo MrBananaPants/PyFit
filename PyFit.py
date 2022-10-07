@@ -372,7 +372,6 @@ def next_step():
     if info_index == len(info_list):
         raise_main_frame()
         return
-    print(f"lengte van naam is {len(exercise_list[exercise_index])}")
     if int(len(exercise_list[exercise_index])) > 25:
         current_workout_step_label.configure(text_font=('Segoe UI', 65))
     else:

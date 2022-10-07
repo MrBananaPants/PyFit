@@ -1,3 +1,4 @@
+import http.client as httplib
 import json
 import os
 import shutil
@@ -6,7 +7,6 @@ import webbrowser
 from pathlib import Path
 from subprocess import call
 from tkinter import messagebox, filedialog
-import http.client as httplib
 
 import PIL.Image
 import customtkinter as ctk
@@ -372,6 +372,11 @@ def next_step():
     if info_index == len(info_list):
         raise_main_frame()
         return
+    print(f"lengte van naam is {len(exercise_list[exercise_index])}")
+    if int(len(exercise_list[exercise_index])) > 25:
+        current_workout_step_label.configure(text_font=('Segoe UI', 65))
+    else:
+        current_workout_step_label.configure(text_font=('Segoe UI', 100))
     current_workout_step_label.configure(text=exercise_list[exercise_index])
     exercise_index += 1
     info_label.configure(text=info_list[info_index])

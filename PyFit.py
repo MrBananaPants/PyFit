@@ -373,7 +373,7 @@ def next_step():
         raise_main_frame()
         return
     if int(len(exercise_list[exercise_index])) > 25:
-        current_workout_step_label.configure(text_font=('Segoe UI', 65))
+        current_workout_step_label.configure(text_font=('Segoe UI', 50))
     else:
         current_workout_step_label.configure(text_font=('Segoe UI', 100))
     current_workout_step_label.configure(text=exercise_list[exercise_index])

@@ -493,7 +493,6 @@ with open(os.path.join(main_path, "settings.json")) as settings_file:
 print(f'setting theme to {str(settings_data["theme"]).lower()}')
 ctk.set_appearance_mode(str(settings_data["theme"]).lower())
 
-
 app.configure(bg=("#f2f2f2", "#202020"))
 
 # Initialize fonts
@@ -559,15 +558,18 @@ pyfit_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
 select_workout_label = ctk.CTkLabel(master=action_frame, text_color=("black", "white"), text="Select workout: ")
 select_workout_label.place(relx=0, rely=0.095, anchor=ctk.W)
 
-workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", dynamic_resizing=False, values=get_stored_workouts(),
+workout_option_menu = ctk.CTkOptionMenu(master=action_frame, fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
+                                        values=get_stored_workouts(),
                                         command=workout_option_menu_selection)
 workout_option_menu.place(relx=0.15, rely=0.145, anchor=ctk.CENTER)
 
-create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=add_icon, compound="left", text="Create new workout",
+create_new_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=add_icon, compound="left", text_color=("black", "white"),
+                                          text="Create new workout",
                                           command=create_new_workout_file)
 create_new_workout_button.place(relx=0.425, rely=0.145, anchor=ctk.CENTER)
 
-remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", image=delete_icon, compound="left", text="Remove",
+remove_workout_button = ctk.CTkButton(master=action_frame, width=80, fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
+                                      text="Remove",
                                       command=remove_workout)
 remove_workout_button.place(relx=0.66, rely=0.145, anchor=ctk.CENTER)
 
@@ -589,7 +591,8 @@ weight_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "#5353
                             fg_color=("white", "#414141"), width=292, placeholder_text="Weight (leave blank for no weight)")
 weight_entry.place(relx=0.03, rely=0.42, anchor=ctk.W)
 
-add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", image=add_icon, compound="left", text="Add step",
+add_step_button = ctk.CTkButton(master=action_frame, width=292, fg_color="#3C99DC", image=add_icon, compound="left", text_color=("black", "white"),
+                                text="Add step",
                                 command=add_workout_step)
 add_step_button.place(relx=0.03, rely=0.47, anchor=ctk.W)
 
@@ -597,7 +600,8 @@ add_step_button.place(relx=0.03, rely=0.47, anchor=ctk.W)
 edit_remove_step_label = ctk.CTkLabel(master=action_frame, text="Edit or remove step: ")
 edit_remove_step_label.place(relx=0.0175, rely=0.545, anchor=ctk.W)
 
-select_workout_step_menu = ctk.CTkOptionMenu(master=action_frame, width=292, fg_color="#3C99DC", dynamic_resizing=False, values=get_workout_steps_names(),
+select_workout_step_menu = ctk.CTkOptionMenu(master=action_frame, width=292, fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
+                                             values=get_workout_steps_names(),
                                              command=stored_workout_menu_selection)
 select_workout_step_menu.place(relx=0.03, rely=0.595, anchor=ctk.W)
 
@@ -621,18 +625,22 @@ edit_weight_entry = ctk.CTkEntry(master=action_frame, border_color=("#b2b2b2", "
                                  width=292, placeholder_text="Weight (no weight for selected step)")
 edit_weight_entry.place(relx=0.03, rely=0.795, anchor=ctk.W)
 
-edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=edit_icon, compound="left", text="Edit step", command=edit_workout_step)
+edit_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=edit_icon, compound="left", text_color=("black", "white"), text="Edit step",
+                                 command=edit_workout_step)
 edit_step_button.place(relx=0.03, rely=0.845, anchor=ctk.W)
 
-remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=delete_icon, compound="left", text="Remove step",
+remove_step_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
+                                   text="Remove step",
                                    command=remove_workout_step)
 remove_step_button.place(relx=0.2825, rely=0.845, anchor=ctk.W)
 
-settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=100, image=settings_icon, compound="left", text="Settings",
+settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=100, image=settings_icon, compound="left", text_color=("black", "white"),
+                                text="Settings",
                                 command=raise_settings_frame)
 settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
 
-start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon, compound="left", text="Start workout",
+start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon, compound="left", text_color=("black", "white"),
+                                     text="Start workout",
                                      command=raise_workout_frame)
 start_workout_button.place(relx=0.5, rely=0.935, anchor=ctk.CENTER)
 
@@ -671,10 +679,12 @@ current_workout_step_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
 info_label = ctk.CTkLabel(workout_frame, text="", font=info_label_font)
 info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 
-next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", font=info_label_font, command=next_step)
+next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text_color=("black", "white"), text="START",
+                                 font=info_label_font, command=next_step)
 next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
-return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", font=return_button_font,
+return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text_color=("black", "white"), text="Return",
+                              font=return_button_font,
                               command=raise_main_frame)
 return_button.place(relx=0.0375, rely=0.055, anchor=ctk.CENTER)
 
@@ -689,7 +699,8 @@ theme_selection_default = str(settings_data["theme"])
 select_theme_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Choose theme: ")
 select_theme_label.place(relx=0, rely=0.095, anchor=ctk.W)
 
-theme_selection = ctk.CTkOptionMenu(master=settings_frame, fg_color="#3C99DC", dynamic_resizing=False, values=["Light", "Dark", "System"],
+theme_selection = ctk.CTkOptionMenu(master=settings_frame, fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
+                                    values=["Light", "Dark", "System"],
                                     command=theme_option_selection)
 theme_selection.place(relx=0.15, rely=0.145, anchor=ctk.CENTER)
 theme_selection.set(theme_selection_default)
@@ -697,31 +708,36 @@ theme_selection.set(theme_selection_default)
 check_for_updates_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Check for updates:")
 check_for_updates_label.place(relx=0.015, rely=0.22, anchor=ctk.W)
 
-check_for_updates_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=update_icon, compound="left", text="Check for updates",
+check_for_updates_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=update_icon, compound="left", text_color=("black", "white"),
+                                         text="Check for updates",
                                          command=lambda: check_for_updates(True))
 check_for_updates_button.place(relx=0.165, rely=0.27, anchor=ctk.CENTER)
 
 reset_app_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Reset to factory settings:")
 reset_app_label.place(relx=0.0325, rely=0.345, anchor=ctk.W)
 
-reset_app_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=reset_icon, compound="left", text="Reset app", command=reset)
+reset_app_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=reset_icon, compound="left", text_color=("black", "white"), text="Reset app",
+                                 command=reset)
 reset_app_button.place(relx=0.15, rely=0.395, anchor=ctk.CENTER)
 
 import_export_label = ctk.CTkLabel(master=settings_frame, text_color=("black", "white"), text="Import or export workouts:")
 import_export_label.place(relx=0.0325, rely=0.47, anchor=ctk.W)
 
-import_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=import_icon, compound="left", text="Import workouts",
+import_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=import_icon, compound="left", text_color=("black", "white"),
+                                        text="Import workouts",
                                         command=import_workouts)
 import_exercises_button.place(relx=0.1525, rely=0.52, anchor=ctk.CENTER)
 # relx=0,03
-export_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=export_icon, compound="left", text="Export workouts",
+export_exercises_button = ctk.CTkButton(master=settings_frame, fg_color="#3C99DC", image=export_icon, compound="left", text_color=("black", "white"),
+                                        text="Export workouts",
                                         command=export_workouts)
 export_exercises_button.place(relx=0.415, rely=0.52, anchor=ctk.CENTER)
 
 about_label = ctk.CTkLabel(master=settings_frame, text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
 about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
 
-return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", image=back_icon, compound="left", text="Return",
+return_to_main_button = ctk.CTkButton(master=settings_frame, width=75, fg_color="#3C99DC", image=back_icon, compound="left", text_color=("black", "white"),
+                                      text="Return",
                                       command=return_to_main_from_settings)
 return_to_main_button.place(relx=0.09, rely=0.035, anchor=ctk.CENTER)
 

@@ -493,10 +493,6 @@ with open(os.path.join(main_path, "settings.json")) as settings_file:
 print(f'setting theme to {str(settings_data["theme"]).lower()}')
 ctk.set_appearance_mode(str(settings_data["theme"]).lower())
 
-if str(settings_data["theme"].lower()) == "dark":
-    icon_theme = "white"
-else:
-    icon_theme = "black"
 
 app.configure(bg=("#f2f2f2", "#202020"))
 
@@ -635,7 +631,6 @@ remove_step_button.place(relx=0.2825, rely=0.845, anchor=ctk.W)
 settings_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", width=100, image=settings_icon, compound="left", text="Settings",
                                 command=raise_settings_frame)
 settings_button.place(relx=0.9, rely=0.035, anchor=ctk.CENTER)
-settings_button.image = icon_theme
 
 start_workout_button = ctk.CTkButton(master=action_frame, fg_color="#3C99DC", image=dumbbell_icon, compound="left", text="Start workout",
                                      command=raise_workout_frame)

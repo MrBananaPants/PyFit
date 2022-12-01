@@ -80,7 +80,7 @@ def import_workouts():
 
 
 def create_new_workout_file():
-    dialog = ctk.CTkInputDialog(master=None, text="Type in workout name:", title="New workout")
+    dialog = ctk.CTkInputDialog(text="Type in workout name:", title="New workout")
     dialog_input = dialog.get_input()
     if dialog_input is None or dialog_input == "":
         return

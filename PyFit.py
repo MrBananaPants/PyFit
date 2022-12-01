@@ -373,9 +373,9 @@ def next_step():
         raise_main_frame()
         return
     if int(len(exercise_list[exercise_index])) > 25:
-        current_workout_step_label.configure(text_font=('Segoe UI', 50))
+        current_workout_step_label.cget("font").configure(size=50)
     else:
-        current_workout_step_label.configure(text_font=('Segoe UI', 100))
+        current_workout_step_label.cget("font").configure(size=100)
     current_workout_step_label.configure(text=exercise_list[exercise_index])
     exercise_index += 1
     info_label.configure(text=info_list[info_index])
@@ -541,6 +541,12 @@ else:
 
 app.configure(bg=("#f2f2f2", "#202020"))
 
+# Initialize fonts
+pyfit_label_font = ctk.CTkFont(family="Segoe UI", size=40)
+current_workout_step_label_font = ctk.CTkFont(family="Segoe UI", size=100)
+info_label_font = ctk.CTkFont(family="Segoe UI", size=50)
+return_button_font = ctk.CTkFont(family="Segoe UI", size=18)
+
 # Initialize icons
 settings_icon_initial = ImageTk.PhotoImage(Image.open(f"media/icons/settings_{icon_theme}.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
 settings_icon_white = ImageTk.PhotoImage(Image.open(f"media/icons/settings_white.png").resize((20, 20), resample=PIL.Image.Resampling(1)))
@@ -592,7 +598,7 @@ action_frame.pack(anchor="w", fill="both", expand=True, side="left", padx=20, pa
 viewer_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10)
 viewer_frame.pack(anchor="w", fill="both", expand=True, side="right", padx=20, pady=20)
 
-pyfit_label = ctk.CTkLabel(master=action_frame, text=f"PyFit", text_font=('Segoe UI', 40))
+pyfit_label = ctk.CTkLabel(master=action_frame, text=f"PyFit", font=pyfit_label_font)
 pyfit_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
 
 select_workout_label = ctk.CTkLabel(master=action_frame, text_color=("black", "white"), text="Select workout: ")
@@ -706,22 +712,22 @@ workout_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))
 progressbar = ctk.CTkProgressBar(master=workout_frame, fg_color=("#e2e2e2", "#333333"), progress_color="#3C99DC", height=15, width=app.winfo_width())
 progressbar.place(relx=0.5, rely=0, anchor=ctk.N)
 
-current_workout_step_label = ctk.CTkLabel(workout_frame, text="Press START to begin", text_font=('Segoe UI', 100))
+current_workout_step_label = ctk.CTkLabel(workout_frame, text="Press START to begin", font=current_workout_step_label_font)
 current_workout_step_label.place(relx=0.50, rely=0.3, anchor=ctk.CENTER)
-info_label = ctk.CTkLabel(workout_frame, text="", text_font=('Segoe UI', 50))
+info_label = ctk.CTkLabel(workout_frame, text="", font=info_label_font)
 info_label.place(relx=0.50, rely=0.5, anchor=ctk.CENTER)
 
-next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", text_font=('Segoe UI', 50), command=next_step)
+next_step_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=300, height=125, text="START", font=info_label_font, command=next_step)
 next_step_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
-return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", text_font=('Segoe UI', 18),
+return_button = ctk.CTkButton(master=workout_frame, fg_color="#3C99DC", width=50, height=25, text="Return", font=return_button_font,
                               command=raise_main_frame)
 return_button.place(relx=0.0375, rely=0.055, anchor=ctk.CENTER)
 
 # SettingsFrame view
 settings_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10)
 
-settings_label = ctk.CTkLabel(master=settings_frame, text=f"Settings", text_font=('Segoe UI', 40))
+settings_label = ctk.CTkLabel(master=settings_frame, text=f"Settings", font=pyfit_label_font)
 settings_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
 
 theme_selection_default = str(settings_data["theme"])

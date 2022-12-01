@@ -297,7 +297,7 @@ def create_exercises_lists():
     info_index = 0
     exercise_list = []
     info_list = []
-    next_step_button.set_text("START")
+    next_step_button.configure(text="START")
     exercises = get_workout_data(os.path.join(path, workout_option_menu.get() + ".json"))
     keys = list(exercises)
     for key in keys:
@@ -328,7 +328,7 @@ def next_step():
     global info_list
     progressbar.configure(width=app.winfo_width())
     progressbar.set(info_index / len(exercise_list))
-    next_step_button.set_text("Next step")
+    next_step_button.configure(text="Next step")
     if info_index == len(info_list):
         raise_main_frame()
         return
@@ -341,7 +341,7 @@ def next_step():
     info_label.configure(text=info_list[info_index])
     info_index += 1
     if info_index == len(info_list):
-        next_step_button.set_text("Finish")
+        next_step_button.configure(text="Finish")
 
 
 def check_connection():
@@ -451,7 +451,7 @@ def raise_workout_frame():
         progressbar.set(0)
         current_workout_step_label.configure(text="Press START to begin")
         info_label.configure(text="")
-        next_step_button.set_text("START")
+        next_step_button.configure(text="START")
         workout_frame.pack(anchor="w", fill="both", expand=True)
         main_frame.pack_forget()
         create_exercises_lists()

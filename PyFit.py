@@ -505,43 +505,43 @@ return_button_font = ctk.CTkFont(family="Segoe UI", size=18)
 # Initialize icons
 settings_icon = ctk.CTkImage(light_image=Image.open("media/icons/settings_black.png"),
                              dark_image=Image.open("media/icons/settings_white.png"),
-                             size=(20, 20))
+                             size=(19, 19))
 
 dumbbell_icon = ctk.CTkImage(light_image=Image.open("media/icons/dumbbell_black.png"),
                              dark_image=Image.open("media/icons/dumbbell_white.png"),
-                             size=(20, 20))
+                             size=(19, 19))
 
 edit_icon = ctk.CTkImage(light_image=Image.open("media/icons/edit_black.png"),
                          dark_image=Image.open("media/icons/edit_white.png"),
-                         size=(20, 20))
+                         size=(19, 19))
 
 export_icon = ctk.CTkImage(light_image=Image.open("media/icons/export_black.png"),
                            dark_image=Image.open("media/icons/export_white.png"),
-                           size=(20, 20))
+                           size=(19, 19))
 
 import_icon = ctk.CTkImage(light_image=Image.open("media/icons/import_black.png"),
                            dark_image=Image.open("media/icons/import_white.png"),
-                           size=(20, 20))
+                           size=(19, 19))
 
 delete_icon = ctk.CTkImage(light_image=Image.open("media/icons/delete_black.png"),
                            dark_image=Image.open("media/icons/delete_white.png"),
-                           size=(20, 20))
+                           size=(19, 19))
 
 update_icon = ctk.CTkImage(light_image=Image.open("media/icons/update_black.png"),
                            dark_image=Image.open("media/icons/update_white.png"),
-                           size=(20, 20))
+                           size=(19, 19))
 
 reset_icon = ctk.CTkImage(light_image=Image.open("media/icons/reset_black.png"),
                           dark_image=Image.open("media/icons/reset_white.png"),
-                          size=(20, 20))
+                          size=(19, 19))
 
 add_icon = ctk.CTkImage(light_image=Image.open("media/icons/add_black.png"),
                         dark_image=Image.open("media/icons/add_white.png"),
-                        size=(20, 20))
+                        size=(19, 19))
 
 back_icon = ctk.CTkImage(light_image=Image.open("media/icons/back_black.png"),
                          dark_image=Image.open("media/icons/back_white.png"),
-                         size=(20, 20))
+                         size=(19, 19))
 
 # mainFrame view
 main_frame = ctk.CTkFrame(app, fg_color=("#f2f2f2", "#202020"))

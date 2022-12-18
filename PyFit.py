@@ -694,7 +694,7 @@ select_theme_label.place(relx=0.03, rely=0.095, anchor=ctk.W)
 theme_selection = ctk.CTkOptionMenu(master=tabview.tab("Settings"), fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
                                     values=["Light", "Dark", "System"],
                                     command=theme_option_selection)
-theme_selection.place(relx=0.15, rely=0.145, anchor=ctk.CENTER)
+theme_selection.place(relx=0.03, rely=0.145, anchor=ctk.W)
 theme_selection.set(theme_selection_default)
 
 check_for_updates_label = ctk.CTkLabel(master=tabview.tab("Settings"), text_color=("black", "white"), text="Check for updates:")
@@ -703,14 +703,14 @@ check_for_updates_label.place(relx=0.03, rely=0.22, anchor=ctk.W)
 check_for_updates_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=update_icon, compound="left", text_color=("black", "white"),
                                          text="Check for updates",
                                          command=lambda: check_for_updates(True))
-check_for_updates_button.place(relx=0.165, rely=0.27, anchor=ctk.CENTER)
+check_for_updates_button.place(relx=0.03, rely=0.27, anchor=ctk.W)
 
 reset_app_label = ctk.CTkLabel(master=tabview.tab("Settings"), text_color=("black", "white"), text="Reset to factory settings:")
 reset_app_label.place(relx=0.03, rely=0.345, anchor=ctk.W)
 
 reset_app_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=reset_icon, compound="left", text_color=("black", "white"), text="Reset app",
                                  command=reset)
-reset_app_button.place(relx=0.15, rely=0.395, anchor=ctk.CENTER)
+reset_app_button.place(relx=0.03, rely=0.395, anchor=ctk.W)
 
 import_export_label = ctk.CTkLabel(master=tabview.tab("Settings"), text_color=("black", "white"), text="Import or export workouts:")
 import_export_label.place(relx=0.03, rely=0.47, anchor=ctk.W)
@@ -718,7 +718,7 @@ import_export_label.place(relx=0.03, rely=0.47, anchor=ctk.W)
 import_exercises_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=import_icon, compound="left", text_color=("black", "white"),
                                         text="Import workouts",
                                         command=import_workouts)
-import_exercises_button.place(relx=0.1525, rely=0.52, anchor=ctk.CENTER)
+import_exercises_button.place(relx=0.03, rely=0.52, anchor=ctk.W)
 
 export_exercises_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=export_icon, compound="left", text_color=("black", "white"),
                                         text="Export workouts",

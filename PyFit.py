@@ -629,7 +629,7 @@ edit_step_button.place(relx=0.03, rely=0.845, anchor=ctk.W)
 remove_step_button = ctk.CTkButton(master=tabview.tab("Home"), fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
                                    text="Remove step",
                                    command=remove_workout_step)
-remove_step_button.place(relx=0.2825, rely=0.845, anchor=ctk.W)
+remove_step_button.place(relx=0.29, rely=0.845, anchor=ctk.W)
 
 start_workout_button = ctk.CTkButton(master=tabview.tab("Home"), fg_color="#3C99DC", image=dumbbell_icon, compound="left", text_color=("black", "white"),
                                      text="Start workout",
@@ -719,7 +719,7 @@ import_exercises_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color
                                         text="Import workouts",
                                         command=import_workouts)
 import_exercises_button.place(relx=0.1525, rely=0.52, anchor=ctk.CENTER)
-# relx=0,03
+
 export_exercises_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=export_icon, compound="left", text_color=("black", "white"),
                                         text="Export workouts",
                                         command=export_workouts)

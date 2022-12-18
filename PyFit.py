@@ -539,7 +539,7 @@ main_frame.pack(anchor="w", fill="both", expand=True)
 
 # Tabview
 
-tabview = ctk.CTkTabview(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10, width=600)
+tabview = ctk.CTkTabview(master=main_frame, fg_color=("#e2e2e2", "#333333"), segmented_button_selected_color="#3C99DC", text_color=("black", "white"), corner_radius=10, width=600)
 tabview.pack(anchor="w", fill="y", expand=True, side="left", padx=20, pady=(2, 20))
 
 tabview.add("Home")

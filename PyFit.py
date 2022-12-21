@@ -58,6 +58,14 @@ def check_files():
                 "theme": "Dark"
             }
             json.dump(settings, file)
+    # Check if the personal records file exists. Create one if it doesn't.
+    pr_path = Path(os.path.join(main_path, "personal_records.json"))
+    pr_path.touch(exist_ok=True)
+    if os.path.getsize(os.path.join(main_path, "personal_records.json")) == 0:
+        print("CREATING PERSONAL_RECORDS FILE")
+        with open(os.path.join(main_path, "personal_records.json"), "w") as file:
+            settings = {}
+            json.dump(settings, file)
 
 
 def export_workouts():
@@ -116,6 +124,15 @@ def get_workout_steps_names():
     return keys
 
 
+def get_pr_names():
+    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+        data = file.read()
+    exercises = json.loads(data)
+    print(str(exercises))
+    keys = list(exercises)
+    return keys
+
+
 def get_workout_data(filename):
     with open(filename, "r") as file:
         return json.load(file)
@@ -127,6 +144,10 @@ def workout_option_menu_selection(choice):
 
 def stored_workout_menu_selection(choice):
     update_entries()
+
+
+def pr_menu_selection(choice):
+    update_pr_entries()
 
 
 def theme_option_selection(choice):
@@ -158,11 +179,30 @@ def update_entries():
         edit_weight_entry.insert(0, exercises[key][2])
 
 
+def update_pr_entries():
+    print("UPDATING PR ENTRIES")
+    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+        data = file.read()
+    exercises = json.loads(data)
+    print(str(exercises))
+    key = select_pr_menu.get()
+    if key == "Select personal record":
+        return
+    clear_pr_entries()
+    pr_edit_name_entry.insert(0, key)
+    pr_edit_weight_entry.insert(0, exercises[key])
+
+
 def reset_workout_view():
     exercise_text.configure(text="")
     reps_text.configure(text="")
     sets_text.configure(text="")
     weight_text.configure(text="")
+
+
+def reset_pr_view():
+    pr_exercise_text.configure(text="")
+    pr_weight_text.configure(text="")
 
 
 def view_workout():
@@ -197,6 +237,28 @@ def view_workout():
     clear_edit_entries()
     select_workout_step_menu.configure(values=get_workout_steps_names())
     select_workout_step_menu.set("Select workout step")
+
+
+def view_pr():
+    reset_pr_view()
+    print("VIEW PR")
+    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+        data = file.read()
+    if data != '{}' and len(data) > 0:
+        exercises = json.loads(data)
+        keys = list(exercises)
+        exercise = ""
+        weight = ""
+        for key in keys:
+            exercise += key + "\n"
+            weight += str(exercises[key]) + "\n"
+        pr_exercise_text.configure(text=exercise)
+        pr_weight_text.configure(text=weight)
+    else:
+        pr_exercise_text.configure(text="(no records)")
+    clear_pr_entries()
+    select_workout_step_menu.configure(values=get_pr_names())
+    select_pr_menu.set("Select personal record")
 
 
 def add_workout_step():
@@ -269,6 +331,71 @@ def edit_workout_step():
         clear_edit_entries()
         select_workout_step_menu.configure(values=get_workout_steps_names())
         select_workout_step_menu.set("Select workout step")
+
+
+def add_pr():
+    name = pr_add_name_entry.get()
+    weight = pr_add_weight_entry.get()
+    if name == "" or weight == "":
+        messagebox.showerror("PyFit", "One or more of the required fields are empty")
+    elif not weight.isnumeric():
+        messagebox.showerror("PyFit", "weight is not a number")
+    else:
+        with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+            data = file.read()
+        exercises = json.loads(data)
+        keys = list(exercises)
+        if name in keys:
+            messagebox.showerror("PyFit", "Personal record already exists")
+            return
+        exercises[name] = str(weight)
+        with open(os.path.join(main_path, "personal_records.json"), "w") as outfile:
+            json.dump(exercises, outfile)
+        view_pr()
+        clear_pr_entries()
+        select_pr_menu.configure(values=get_pr_names())
+
+
+def edit_pr():
+    name = pr_edit_name_entry.get()
+    weight = pr_edit_weight_entry.get()
+    if name == "" or weight == "":
+        messagebox.showerror("PyFit", "One or more of the required fields are empty")
+    elif not weight.isnumeric():
+        messagebox.showerror("PyFit", "weight is not a number")
+    else:
+        with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+            data = file.read()
+        exercises = json.loads(data)
+        keys = list(exercises)
+        if name not in keys:
+            messagebox.showerror("PyFit", "You can't change the record's name")
+            pr_add_name_entry.delete(0, 'end')
+            pr_add_name_entry.insert(0, select_pr_menu.get())
+            return
+        exercises[name] = str(weight)
+        with open(os.path.join(main_path, "personal_records.json"), "w") as outfile:
+            json.dump(exercises, outfile)
+        view_pr()
+        clear_pr_entries()
+        select_pr_menu.configure(values=get_pr_names())
+
+
+def remove_pr():
+    name = select_pr_menu.get()
+    if name == "Select personal record":
+        messagebox.showerror("PyFit", "No record selected")
+        return
+    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+        data = file.read()
+    exercises = json.loads(data)
+    del exercises[name]
+    with open(os.path.join(main_path, "personal_records.json"), "w") as outfile:
+        json.dump(exercises, outfile)
+    clear_pr_entries()
+    view_pr()
+    select_pr_menu.configure(values=get_pr_names())
+    messagebox.showinfo("PyFit", f'"{name}" record has been removed')
 
 
 def remove_workout():
@@ -400,7 +527,7 @@ def check_for_updates(alert_when_no_update=False):
 
 
 def reset():
-    if messagebox.askyesno("PyFit", f"Are you sure you want to continue? This will remove all custom workout files and reset all settings."):
+    if messagebox.askyesno("PyFit", f"Are you sure you want to continue? This will remove all custom workouts, personal records and reset all settings to their default value."):
         clear_entries()
         clear_edit_entries()
         remove_files()
@@ -414,6 +541,7 @@ def reset():
         theme_selection.set("Dark")
         app.update()
         view_workout()
+        view_pr()
         messagebox.showinfo("PyFit", "Reset complete")
 
 
@@ -426,6 +554,13 @@ def clear_entries():
     reps_entry.delete(0, 'end')
     sets_entry.delete(0, 'end')
     weight_entry.delete(0, 'end')
+
+
+def clear_pr_entries():
+    pr_add_name_entry.delete(0, 'end')
+    pr_add_weight_entry.delete(0, 'end')
+    pr_edit_weight_entry.delete(0, 'end')
+    pr_edit_name_entry.delete(0, 'end')
 
 
 def clear_edit_entries():
@@ -457,6 +592,7 @@ def raise_workout_frame():
 def main():
     check_for_updates(False)
     view_workout()
+    view_pr()
     app.mainloop()
 
 
@@ -543,6 +679,7 @@ tabview = ctk.CTkTabview(master=main_frame, fg_color=("#e2e2e2", "#333333"), seg
 tabview.pack(anchor="w", fill="y", expand=True, side="left", padx=20, pady=(2, 20))
 
 tabview.add("Home")
+tabview.add("Personal records")
 tabview.add("Settings")
 tabview.set("Home")
 
@@ -727,6 +864,70 @@ export_exercises_button.place(relx=0.415, rely=0.52, anchor=ctk.CENTER)
 
 about_label = ctk.CTkLabel(master=tabview.tab("Settings"), text=f"This app has been made by Joran Vancoillie\nPyFit v{version}")
 about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
+
+# Personal records view
+pr_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10)
+
+settings_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text=f"Personal records", font=pyfit_label_font)
+settings_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
+
+pr_exercise_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Exercise")
+pr_exercise_label.place(relx=0.1, rely=0.125, anchor=ctk.W)
+
+pr_weight_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Weight (kg)")
+pr_weight_label.place(relx=0.55, rely=0.125, anchor=ctk.CENTER)
+
+pr_exercise_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=250, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left", anchor="nw")
+pr_exercise_text.place(relx=0.25, rely=0.175, anchor=ctk.N)
+
+pr_weight_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
+pr_weight_text.place(relx=0.55, rely=0.175, anchor=ctk.N)
+
+# Add new record
+pr_add_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text_color=("black", "white"), text="Add new record:")
+pr_add_label.place(relx=0.03, rely=0.500, anchor=ctk.W)
+
+pr_add_name_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
+                                 text_color=("black", "white"),
+                                 fg_color=("white", "#414141"), width=292, placeholder_text="Record name")
+pr_add_name_entry.place(relx=0.03, rely=0.550, anchor=ctk.W)
+pr_add_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
+                                   text_color=("black", "white"),
+                                   fg_color=("white", "#414141"), width=292,
+                                   placeholder_text="Record weight")
+pr_add_weight_entry.place(relx=0.03, rely=0.600, anchor=ctk.W)
+
+pr_add_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", width=292, image=add_icon, compound="left", text_color=("black", "white"), text="Add record",
+                                     command=add_pr)
+pr_add_record_button.place(relx=0.03, rely=0.650, anchor=ctk.W)
+
+# Edit or remove record
+pr_edit_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text_color=("black", "white"), text="Update or remove record:")
+pr_edit_label.place(relx=0.03, rely=0.725, anchor=ctk.W)
+
+select_pr_menu = ctk.CTkOptionMenu(master=tabview.tab("Personal records"), width=292, fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
+                                   values=get_pr_names(),
+                                   command=pr_menu_selection)
+select_pr_menu.place(relx=0.03, rely=0.775, anchor=ctk.W)
+
+pr_edit_name_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
+                                  text_color=("black", "white"),
+                                  fg_color=("white", "#414141"), width=292, placeholder_text="Record name")
+pr_edit_name_entry.place(relx=0.03, rely=0.825, anchor=ctk.W)
+pr_edit_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
+                                    text_color=("black", "white"),
+                                    fg_color=("white", "#414141"), width=292,
+                                    placeholder_text="Record weight")
+pr_edit_weight_entry.place(relx=0.03, rely=0.875, anchor=ctk.W)
+
+pr_edit_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=edit_icon, compound="left", text_color=("black", "white"), text="Update record",
+                                      command=edit_pr)
+pr_edit_record_button.place(relx=0.03, rely=0.925, anchor=ctk.W)
+
+pr_remove_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
+                                        text="Remove record",
+                                        command=remove_pr)
+pr_remove_record_button.place(relx=0.29, rely=0.925, anchor=ctk.W)
 
 if __name__ == "__main__":
     main()

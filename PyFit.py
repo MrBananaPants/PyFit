@@ -213,6 +213,7 @@ def reset_workout_view():
 def reset_pr_view():
     pr_exercise_text.configure(text="")
     pr_weight_text.configure(text="")
+    pr_date_text.configure(text="")
 
 
 def view_workout():
@@ -259,11 +260,14 @@ def view_pr():
         keys = list(exercises)
         exercise = ""
         weight = ""
+        date = ""
         for key in keys:
             exercise += key + "\n"
             weight += str(list(list(exercises[key])[1])[-1]) + "\n"
+            date += str(list(list(exercises[key])[0])[-1]) + "\n"
         pr_exercise_text.configure(text=exercise)
         pr_weight_text.configure(text=weight)
+        pr_date_text.configure(text=date)
     else:
         pr_exercise_text.configure(text="(no records)")
     clear_pr_entries()
@@ -520,6 +524,7 @@ def generate_graph():
     if data != '{}' and len(data) > 0 and select_graph_menu.get() != "Select personal record":
         exercises = json.loads(data)
     else:
+        messagebox.showerror("PyFit", "No personal record selected. Select a record or add a new one.")
         return
 
     dates_list_string = exercises[select_graph_menu.get()][0]
@@ -529,9 +534,6 @@ def generate_graph():
     records_list_string = exercises[select_graph_menu.get()][1]
     for record in records_list_string:
         records.append(int(record))
-
-    # dates = [datetime(2022, 9, 5), datetime(2022, 10, 20), datetime(2022, 11, 10), datetime(2022, 12, 2), datetime(2022, 12, 24)]
-    # records = [50, 57, 80, 75, 95]
 
     f, a = plt.subplots(figsize=(6, 5), dpi=100)
     a.plot(dates, records, linestyle="solid", color="#3C99DC")
@@ -633,6 +635,8 @@ def reset():
         app.update()
         view_workout()
         view_pr()
+        for widget in graph_frame.winfo_children():
+            widget.destroy()
         messagebox.showinfo("PyFit", "Reset complete")
 
 
@@ -980,14 +984,20 @@ pr_exercise_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="E
 pr_exercise_label.place(relx=0.1, rely=0.125, anchor=ctk.W)
 
 pr_weight_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Weight (kg)")
-pr_weight_label.place(relx=0.55, rely=0.125, anchor=ctk.CENTER)
+pr_weight_label.place(relx=0.5, rely=0.125, anchor=ctk.CENTER)
 
-pr_exercise_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=250, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left",
+pr_date_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Date")
+pr_date_label.place(relx=0.8, rely=0.125, anchor=ctk.CENTER)
+
+pr_exercise_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=225, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left",
                                 anchor="nw")
-pr_exercise_text.place(relx=0.25, rely=0.175, anchor=ctk.N)
+pr_exercise_text.place(relx=0.225, rely=0.175, anchor=ctk.N)
 
 pr_weight_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
-pr_weight_text.place(relx=0.55, rely=0.175, anchor=ctk.N)
+pr_weight_text.place(relx=0.50, rely=0.175, anchor=ctk.N)
+
+pr_date_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
+pr_date_text.place(relx=0.8, rely=0.175, anchor=ctk.N)
 
 # Add new record
 pr_add_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text_color=("black", "white"), text="Add new record:")

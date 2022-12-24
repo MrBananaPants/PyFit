@@ -559,7 +559,7 @@ def generate_graph():
     canvas = FigureCanvasTkAgg(f, graph_frame)
 
     canvas.get_tk_widget().pack(side=ctk.TOP, fill=ctk.BOTH, expand=False)
-    img = PhotoImage(file='icon.ico')
+    img = PhotoImage(file='media/icon.ico')
     app.tk.call('wm', 'iconphoto', app._w, img)
 
 
@@ -725,7 +725,7 @@ app.resizable(False, False)
 
 app.protocol("WM_DELETE_WINDOW", quit_me)
 
-img = PhotoImage(file='icon.ico')
+img = PhotoImage(file='media/icon.ico')
 app.tk.call('wm', 'iconphoto', app._w, img)
 
 # Initialize fonts

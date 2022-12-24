@@ -4,9 +4,18 @@ import os
 import shutil
 import urllib.request
 import webbrowser
+from datetime import datetime
 from pathlib import Path
 from subprocess import call
 from tkinter import messagebox, filedialog
+
+import matplotlib
+from PIL.ImageTk import PhotoImage
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+matplotlib.use("TkAgg")
+import matplotlib.dates as mdates
 
 import customtkinter as ctk
 import requests
@@ -163,6 +172,7 @@ def change_theme(theme):
     with open(os.path.join(main_path, "settings.json"), "w") as outfile:
         json.dump(settings, outfile)
     ctk.set_appearance_mode(str(theme).lower())
+    generate_graph()
 
 
 def update_entries():
@@ -190,7 +200,7 @@ def update_pr_entries():
         return
     clear_pr_entries()
     pr_edit_name_entry.insert(0, key)
-    pr_edit_weight_entry.insert(0, exercises[key])
+    pr_edit_weight_entry.insert(0, exercises[key][1][-1])
 
 
 def reset_workout_view():
@@ -251,7 +261,7 @@ def view_pr():
         weight = ""
         for key in keys:
             exercise += key + "\n"
-            weight += str(exercises[key]) + "\n"
+            weight += str(list(list(exercises[key])[1])[-1]) + "\n"
         pr_exercise_text.configure(text=exercise)
         pr_weight_text.configure(text=weight)
     else:
@@ -259,6 +269,7 @@ def view_pr():
     clear_pr_entries()
     select_workout_step_menu.configure(values=get_pr_names())
     select_pr_menu.set("Select personal record")
+    select_graph_menu.set("Select personal record")
 
 
 def add_workout_step():
@@ -348,12 +359,13 @@ def add_pr():
         if name in keys:
             messagebox.showerror("PyFit", "Personal record already exists")
             return
-        exercises[name] = str(weight)
+        exercises[name] = [[datetime.today().strftime('%d-%m-%Y')], [str(weight)]]
         with open(os.path.join(main_path, "personal_records.json"), "w") as outfile:
             json.dump(exercises, outfile)
         view_pr()
         clear_pr_entries()
         select_pr_menu.configure(values=get_pr_names())
+        select_graph_menu.configure(values=get_pr_names())
 
 
 def edit_pr():
@@ -373,12 +385,26 @@ def edit_pr():
             pr_add_name_entry.delete(0, 'end')
             pr_add_name_entry.insert(0, select_pr_menu.get())
             return
-        exercises[name] = str(weight)
+        # "benchpress" : [[date, date, date], [weight weight weight]]
+
+        record_dates = exercises[name][0]
+        if datetime.today().strftime('%d-%m-%Y') in record_dates:
+            print("Record for today already exists, replacing old record...")
+            record_weights = exercises[name][1]
+            record_weights[-1] = str(weight)
+        else:
+            record_dates.append(datetime.today().strftime('%d-%m-%Y'))
+            record_weights = exercises[name][1]
+            record_weights.append(str(weight))
+
+        print(f"--------------NEW PR VALUE: {str([record_dates, record_weights])}")
+        exercises[name] = [record_dates, record_weights]
         with open(os.path.join(main_path, "personal_records.json"), "w") as outfile:
             json.dump(exercises, outfile)
         view_pr()
         clear_pr_entries()
         select_pr_menu.configure(values=get_pr_names())
+        select_graph_menu.configure(values=get_pr_names())
 
 
 def remove_pr():
@@ -395,6 +421,7 @@ def remove_pr():
     clear_pr_entries()
     view_pr()
     select_pr_menu.configure(values=get_pr_names())
+    select_graph_menu.configure(values=get_pr_names())
     messagebox.showinfo("PyFit", f'"{name}" record has been removed')
 
 
@@ -471,6 +498,69 @@ def next_step():
         next_step_button.configure(text="Finish")
 
 
+def generate_graph():
+    for widget in graph_frame.winfo_children():
+        widget.destroy()
+
+    with open(os.path.join(main_path, "settings.json")) as settings_file_graph:
+        settings_data_graph = json.load(settings_file_graph)
+
+    if str(settings_data_graph["theme"]).lower() == "light":
+        background_color = "#e2e2e2"
+        graph_color = "black"
+    else:
+        background_color = "#333333"
+        graph_color = "white"
+
+    dates = []
+    records = []
+
+    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
+        data = file.read()
+    if data != '{}' and len(data) > 0 and select_graph_menu.get() != "Select personal record":
+        exercises = json.loads(data)
+    else:
+        return
+
+    dates_list_string = exercises[select_graph_menu.get()][0]
+    for date in dates_list_string:
+        dates.append(datetime.strptime(date, '%d-%m-%Y'))
+
+    records_list_string = exercises[select_graph_menu.get()][1]
+    for record in records_list_string:
+        records.append(int(record))
+
+    # dates = [datetime(2022, 9, 5), datetime(2022, 10, 20), datetime(2022, 11, 10), datetime(2022, 12, 2), datetime(2022, 12, 24)]
+    # records = [50, 57, 80, 75, 95]
+
+    f, a = plt.subplots(figsize=(6, 5), dpi=100)
+    a.plot(dates, records, linestyle="solid", color="#3C99DC")
+
+    plt.xlabel('Date')
+    plt.ylabel('Weight (kg)')
+
+    date_format = mdates.DateFormatter('%b-%y')
+    a.xaxis.set_major_formatter(date_format)
+    a.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+
+    a.set_facecolor(background_color)
+    f.patch.set_facecolor(background_color)
+    a.spines['top'].set_color(background_color)
+    a.spines['right'].set_color(background_color)
+    a.spines['bottom'].set_color(graph_color)
+    a.spines['left'].set_color(graph_color)
+    a.xaxis.label.set_color(graph_color)
+    a.yaxis.label.set_color(graph_color)
+    a.tick_params(axis='x', colors=graph_color)
+    a.tick_params(axis='y', colors=graph_color)
+
+    canvas = FigureCanvasTkAgg(f, graph_frame)
+
+    canvas.get_tk_widget().pack(side=ctk.TOP, fill=ctk.BOTH, expand=False)
+    img = PhotoImage(file='icon.ico')
+    app.tk.call('wm', 'iconphoto', app._w, img)
+
+
 def check_connection():
     connection = httplib.HTTPConnection("www.github.com", timeout=5)
     try:
@@ -527,7 +617,8 @@ def check_for_updates(alert_when_no_update=False):
 
 
 def reset():
-    if messagebox.askyesno("PyFit", f"Are you sure you want to continue? This will remove all custom workouts, personal records and reset all settings to their default value."):
+    if messagebox.askyesno("PyFit",
+                           f"Are you sure you want to continue? This will remove all custom workouts, personal records and reset all settings to their default value."):
         clear_entries()
         clear_edit_entries()
         remove_files()
@@ -589,6 +680,12 @@ def raise_workout_frame():
         messagebox.showerror("PyFit", "The selected workout doesn't contain any data.\nSelect another workout or edit the current one.")
 
 
+def quit_me():
+    print('quit')
+    app.quit()
+    app.destroy()
+
+
 def main():
     check_for_updates(False)
     view_workout()
@@ -621,6 +718,11 @@ ctk.set_appearance_mode(str(settings_data["theme"]).lower())
 
 app.configure(bg=("#f2f2f2", "#202020"))
 app.resizable(False, False)
+
+app.protocol("WM_DELETE_WINDOW", quit_me)
+
+img = PhotoImage(file='icon.ico')
+app.tk.call('wm', 'iconphoto', app._w, img)
 
 # Initialize fonts
 pyfit_label_font = ctk.CTkFont(family="Segoe UI", size=40)
@@ -675,11 +777,13 @@ main_frame.pack(anchor="w", fill="both", expand=True)
 
 # Tabview
 
-tabview = ctk.CTkTabview(master=main_frame, fg_color=("#e2e2e2", "#333333"), segmented_button_selected_color="#3C99DC", text_color=("black", "white"), corner_radius=10, width=600)
+tabview = ctk.CTkTabview(master=main_frame, fg_color=("#e2e2e2", "#333333"), segmented_button_selected_color="#3C99DC", text_color=("black", "white"),
+                         corner_radius=10, width=600)
 tabview.pack(anchor="w", fill="y", expand=True, side="left", padx=20, pady=(2, 20))
 
 tabview.add("Home")
 tabview.add("Personal records")
+tabview.add("Records history")
 tabview.add("Settings")
 tabview.set("Home")
 
@@ -695,14 +799,15 @@ select_workout_label.place(relx=0.03, rely=0.095, anchor=ctk.W)
 workout_option_menu = ctk.CTkOptionMenu(master=tabview.tab("Home"), fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
                                         values=get_stored_workouts(),
                                         command=workout_option_menu_selection)
-workout_option_menu.place(relx=0.15, rely=0.145, anchor=ctk.CENTER)
+workout_option_menu.place(relx=0.03, rely=0.145, anchor=ctk.W)
 
 create_new_workout_button = ctk.CTkButton(master=tabview.tab("Home"), fg_color="#3C99DC", image=add_icon, compound="left", text_color=("black", "white"),
                                           text="Create new workout",
                                           command=create_new_workout_file)
 create_new_workout_button.place(relx=0.425, rely=0.145, anchor=ctk.CENTER)
 
-remove_workout_button = ctk.CTkButton(master=tabview.tab("Home"), width=80, fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
+remove_workout_button = ctk.CTkButton(master=tabview.tab("Home"), width=80, fg_color="#3C99DC", image=delete_icon, compound="left",
+                                      text_color=("black", "white"),
                                       text="Remove",
                                       command=remove_workout)
 remove_workout_button.place(relx=0.66, rely=0.145, anchor=ctk.CENTER)
@@ -759,7 +864,8 @@ edit_weight_entry = ctk.CTkEntry(master=tabview.tab("Home"), border_color=("#b2b
                                  width=292, placeholder_text="Weight (no weight for selected step)")
 edit_weight_entry.place(relx=0.03, rely=0.795, anchor=ctk.W)
 
-edit_step_button = ctk.CTkButton(master=tabview.tab("Home"), fg_color="#3C99DC", image=edit_icon, compound="left", text_color=("black", "white"), text="Edit step",
+edit_step_button = ctk.CTkButton(master=tabview.tab("Home"), fg_color="#3C99DC", image=edit_icon, compound="left", text_color=("black", "white"),
+                                 text="Edit step",
                                  command=edit_workout_step)
 edit_step_button.place(relx=0.03, rely=0.845, anchor=ctk.W)
 
@@ -845,7 +951,8 @@ check_for_updates_button.place(relx=0.03, rely=0.27, anchor=ctk.W)
 reset_app_label = ctk.CTkLabel(master=tabview.tab("Settings"), text_color=("black", "white"), text="Reset to factory settings:")
 reset_app_label.place(relx=0.03, rely=0.345, anchor=ctk.W)
 
-reset_app_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=reset_icon, compound="left", text_color=("black", "white"), text="Reset app",
+reset_app_button = ctk.CTkButton(master=tabview.tab("Settings"), fg_color="#3C99DC", image=reset_icon, compound="left", text_color=("black", "white"),
+                                 text="Reset app",
                                  command=reset)
 reset_app_button.place(relx=0.03, rely=0.395, anchor=ctk.W)
 
@@ -866,10 +973,8 @@ about_label = ctk.CTkLabel(master=tabview.tab("Settings"), text=f"This app has b
 about_label.place(relx=0.5, rely=0.96, anchor=ctk.CENTER)
 
 # Personal records view
-pr_frame = ctk.CTkFrame(master=main_frame, fg_color=("#e2e2e2", "#333333"), corner_radius=10)
-
-settings_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text=f"Personal records", font=pyfit_label_font)
-settings_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
+personal_records_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text=f"Personal records", font=pyfit_label_font)
+personal_records_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
 
 pr_exercise_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Exercise")
 pr_exercise_label.place(relx=0.1, rely=0.125, anchor=ctk.W)
@@ -877,7 +982,8 @@ pr_exercise_label.place(relx=0.1, rely=0.125, anchor=ctk.W)
 pr_weight_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text="Weight (kg)")
 pr_weight_label.place(relx=0.55, rely=0.125, anchor=ctk.CENTER)
 
-pr_exercise_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=250, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left", anchor="nw")
+pr_exercise_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=250, height=200, text="", bg_color=("#e2e2e2", "#333333"), justify="left",
+                                anchor="nw")
 pr_exercise_text.place(relx=0.25, rely=0.175, anchor=ctk.N)
 
 pr_weight_text = ctk.CTkLabel(master=tabview.tab("Personal records"), width=80, text="", bg_color=("#e2e2e2", "#333333"), justify="center")
@@ -897,7 +1003,8 @@ pr_add_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), borde
                                    placeholder_text="Record weight")
 pr_add_weight_entry.place(relx=0.03, rely=0.600, anchor=ctk.W)
 
-pr_add_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", width=292, image=add_icon, compound="left", text_color=("black", "white"), text="Add record",
+pr_add_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", width=292, image=add_icon, compound="left",
+                                     text_color=("black", "white"), text="Add record",
                                      command=add_pr)
 pr_add_record_button.place(relx=0.03, rely=0.650, anchor=ctk.W)
 
@@ -920,14 +1027,33 @@ pr_edit_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), bord
                                     placeholder_text="Record weight")
 pr_edit_weight_entry.place(relx=0.03, rely=0.875, anchor=ctk.W)
 
-pr_edit_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=edit_icon, compound="left", text_color=("black", "white"), text="Update record",
+pr_edit_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=edit_icon, compound="left",
+                                      text_color=("black", "white"), text="Update record",
                                       command=edit_pr)
 pr_edit_record_button.place(relx=0.03, rely=0.925, anchor=ctk.W)
 
-pr_remove_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=delete_icon, compound="left", text_color=("black", "white"),
+pr_remove_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=delete_icon, compound="left",
+                                        text_color=("black", "white"),
                                         text="Remove record",
                                         command=remove_pr)
 pr_remove_record_button.place(relx=0.29, rely=0.925, anchor=ctk.W)
+
+# Records history view
+history_label = ctk.CTkLabel(master=tabview.tab("Records history"), text=f"Records history", font=pyfit_label_font)
+history_label.place(relx=0.5, rely=0.04, anchor=ctk.CENTER)
+
+select_graph_menu = ctk.CTkOptionMenu(master=tabview.tab("Records history"), width=200, fg_color="#3C99DC", text_color=("black", "white"),
+                                      dynamic_resizing=False,
+                                      values=get_pr_names(), command=print("generate graph"))
+select_graph_menu.place(relx=0.03, rely=0.125, anchor=ctk.W)
+
+generate_graph_button = ctk.CTkButton(master=tabview.tab("Records history"), fg_color="#3C99DC", image=update_icon, compound="left",
+                                      text_color=("black", "white"), text="Generate graph", command=generate_graph)
+generate_graph_button.place(relx=0.39, rely=0.125, anchor=ctk.W)
+
+graph_frame = ctk.CTkFrame(master=tabview.tab("Records history"), fg_color=("#e2e2e2", "#333333"), height=525, width=300)
+graph_frame.place(relx=0.5, rely=0.975, anchor=ctk.S)
+# generate_graph
 
 if __name__ == "__main__":
     main()

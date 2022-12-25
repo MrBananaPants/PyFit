@@ -156,7 +156,7 @@ def stored_workout_menu_selection(choice):
 
 
 def pr_menu_selection(choice):
-    update_pr_entries()
+    return
 
 
 def theme_option_selection(choice):
@@ -187,20 +187,6 @@ def update_entries():
     edit_sets_entry.insert(0, exercises[key][1])
     if exercises[key][2] != "":
         edit_weight_entry.insert(0, exercises[key][2])
-
-
-def update_pr_entries():
-    print("UPDATING PR ENTRIES")
-    with open(os.path.join(main_path, "personal_records.json"), "r") as file:
-        data = file.read()
-    exercises = json.loads(data)
-    print(str(exercises))
-    key = select_pr_menu.get()
-    if key == "Select personal record":
-        return
-    clear_pr_entries()
-    pr_edit_name_entry.insert(0, key)
-    pr_edit_weight_entry.insert(0, exercises[key][1][-1])
 
 
 def reset_workout_view():
@@ -373,22 +359,20 @@ def add_pr():
 
 
 def edit_pr():
-    name = pr_edit_name_entry.get()
-    weight = pr_edit_weight_entry.get()
-    if name == "" or weight == "":
-        messagebox.showerror("PyFit", "One or more of the required fields are empty")
-    elif not weight.isnumeric():
-        messagebox.showerror("PyFit", "weight is not a number")
+    dialog = ctk.CTkInputDialog(text="Type in new record weight:", title="Update record")
+    dialog_input = dialog.get_input()
+    if dialog_input is None or dialog_input == "":
+        return
+    if len(dialog_input) > 100:
+        messagebox.showerror("PyFit", "Record weight too long")
+        return
     else:
         with open(os.path.join(main_path, "personal_records.json"), "r") as file:
             data = file.read()
         exercises = json.loads(data)
         keys = list(exercises)
-        if name not in keys:
-            messagebox.showerror("PyFit", "You can't change the record's name")
-            pr_add_name_entry.delete(0, 'end')
-            pr_add_name_entry.insert(0, select_pr_menu.get())
-            return
+        name = select_pr_menu.get()
+        weight = dialog_input
         # "benchpress" : [[date, date, date], [weight weight weight]]
 
         record_dates = exercises[name][0]
@@ -660,10 +644,6 @@ def clear_pr_entries():
     pr_add_name_entry.configure(placeholder_text="Record name")
     pr_add_weight_entry.delete(0, 'end')
     pr_add_weight_entry.configure(placeholder_text="Record weight")
-    pr_edit_weight_entry.delete(0, 'end')
-    pr_edit_weight_entry.configure(placeholder_text="Record name")
-    pr_edit_name_entry.delete(0, 'end')
-    pr_edit_name_entry.configure(placeholder_text="Record weight")
 
 
 def clear_edit_entries():
@@ -1013,41 +993,31 @@ pr_date_text.place(relx=0.8, rely=0.175, anchor=ctk.N)
 
 # Add new record
 pr_add_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text_color=("black", "white"), text="Add new record:")
-pr_add_label.place(relx=0.03, rely=0.500, anchor=ctk.W)
+pr_add_label.place(relx=0.03, rely=0.600, anchor=ctk.W)
 
 pr_add_name_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
                                  text_color=("black", "white"),
                                  fg_color=("white", "#414141"), width=292, placeholder_text="Record name")
-pr_add_name_entry.place(relx=0.03, rely=0.550, anchor=ctk.W)
+pr_add_name_entry.place(relx=0.03, rely=0.650, anchor=ctk.W)
 pr_add_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
                                    text_color=("black", "white"),
                                    fg_color=("white", "#414141"), width=292,
                                    placeholder_text="Record weight")
-pr_add_weight_entry.place(relx=0.03, rely=0.600, anchor=ctk.W)
+pr_add_weight_entry.place(relx=0.03, rely=0.700, anchor=ctk.W)
 
 pr_add_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", width=292, image=add_icon, compound="left",
                                      text_color=("black", "white"), text="Add record",
                                      command=add_pr)
-pr_add_record_button.place(relx=0.03, rely=0.650, anchor=ctk.W)
+pr_add_record_button.place(relx=0.03, rely=0.750, anchor=ctk.W)
 
 # Edit or remove record
 pr_edit_label = ctk.CTkLabel(master=tabview.tab("Personal records"), text_color=("black", "white"), text="Update or remove record:")
-pr_edit_label.place(relx=0.03, rely=0.725, anchor=ctk.W)
+pr_edit_label.place(relx=0.03, rely=0.825, anchor=ctk.W)
 
 select_pr_menu = ctk.CTkOptionMenu(master=tabview.tab("Personal records"), width=292, fg_color="#3C99DC", text_color=("black", "white"), dynamic_resizing=False,
                                    values=get_pr_names(),
                                    command=pr_menu_selection)
-select_pr_menu.place(relx=0.03, rely=0.775, anchor=ctk.W)
-
-pr_edit_name_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
-                                  text_color=("black", "white"),
-                                  fg_color=("white", "#414141"), width=292, placeholder_text="Record name")
-pr_edit_name_entry.place(relx=0.03, rely=0.825, anchor=ctk.W)
-pr_edit_weight_entry = ctk.CTkEntry(master=tabview.tab("Personal records"), border_color=("#b2b2b2", "#535353"), placeholder_text_color=("#858585", "#afafaf"),
-                                    text_color=("black", "white"),
-                                    fg_color=("white", "#414141"), width=292,
-                                    placeholder_text="Record weight")
-pr_edit_weight_entry.place(relx=0.03, rely=0.875, anchor=ctk.W)
+select_pr_menu.place(relx=0.03, rely=0.875, anchor=ctk.W)
 
 pr_edit_record_button = ctk.CTkButton(master=tabview.tab("Personal records"), fg_color="#3C99DC", image=edit_icon, compound="left",
                                       text_color=("black", "white"), text="Update record",

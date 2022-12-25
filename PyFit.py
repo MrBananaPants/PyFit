@@ -271,7 +271,7 @@ def view_pr():
     else:
         pr_exercise_text.configure(text="(no records)")
     clear_pr_entries()
-    select_workout_step_menu.configure(values=get_pr_names())
+    select_pr_menu.configure(values=get_pr_names())
     select_pr_menu.set("Select personal record")
     select_graph_menu.set("Select personal record")
 

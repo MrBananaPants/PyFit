@@ -646,23 +646,35 @@ def remove_files():
 
 def clear_entries():
     name_exercise_entry.delete(0, 'end')
+    name_exercise_entry.configure(placeholder_text="Exercise name")
     reps_entry.delete(0, 'end')
+    reps_entry.configure(placeholder_text="Amount of reps")
     sets_entry.delete(0, 'end')
+    sets_entry.configure(placeholder_text="Amount of sets")
     weight_entry.delete(0, 'end')
+    weight_entry.configure(placeholder_text="Weight (leave blank for no weight)")
 
 
 def clear_pr_entries():
     pr_add_name_entry.delete(0, 'end')
+    pr_add_name_entry.configure(placeholder_text="Record name")
     pr_add_weight_entry.delete(0, 'end')
+    pr_add_weight_entry.configure(placeholder_text="Record weight")
     pr_edit_weight_entry.delete(0, 'end')
+    pr_edit_weight_entry.configure(placeholder_text="Record name")
     pr_edit_name_entry.delete(0, 'end')
+    pr_edit_name_entry.configure(placeholder_text="Record weight")
 
 
 def clear_edit_entries():
     edit_name_exercise_entry.delete(0, 'end')
+    edit_name_exercise_entry.configure(placeholder_text="Exercise name")
     edit_reps_entry.delete(0, 'end')
+    edit_reps_entry.configure(placeholder_text="Amount of reps")
     edit_sets_entry.delete(0, 'end')
+    edit_sets_entry.configure(placeholder_text="Amount of sets")
     edit_weight_entry.delete(0, 'end')
+    edit_weight_entry.configure(placeholder_text="Weight (no weight for selected step)")
 
 
 def raise_main_frame():

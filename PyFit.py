@@ -9,17 +9,16 @@ from pathlib import Path
 from subprocess import call
 from tkinter import messagebox, filedialog
 
+import customtkinter as ctk
 import matplotlib
+import matplotlib.dates as mdates
+import requests
+from PIL import Image
 from PIL.ImageTk import PhotoImage
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 matplotlib.use("TkAgg")
-import matplotlib.dates as mdates
-
-import customtkinter as ctk
-import requests
-from PIL import Image
 
 if os.name == 'nt':
     path = os.path.join(os.getenv("APPDATA"), "PyFit", "workouts")

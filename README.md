@@ -13,6 +13,8 @@ On the rest screen, you can see what the next exercise will be.
 - Automatic rest screen between each step when doing a workout
 - Progress bar on workout screen
 - Statistics after finishing workout (total rep count and total volume)
+- Personal records
+- History graph of personal records to track improvements
 - Dark theme and Light theme
 - Settings
     - Choose between Dark theme, Light theme or follow system theme
@@ -29,6 +31,18 @@ On the rest screen, you can see what the next exercise will be.
 | Dark theme                 | Light theme                |
 |----------------------------|----------------------------|
 | ![](media/Screenshot1.png) | ![](media/Screenshot2.png) |
+
+<div align="center">
+    <img src="media/Screenshot7.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot8.png" height="500" alt=""/>
+</div>
+
+<div align="center">
+    <img src="media/Screenshot9.png" height="500" alt=""/>
+</div>
 
 <div align="center">
     <img src="media/Screenshot3.png" height="500" alt=""/>

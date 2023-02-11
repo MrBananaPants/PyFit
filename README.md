@@ -13,8 +13,8 @@ On the rest screen, you can see what the next exercise will be.
 - Automatic rest screen between each step when doing a workout
 - Progress bar on workout screen
 - Statistics after finishing workout (total rep count and total volume)
-- Personal records
-- History graph of personal records to track improvements
+- Personal records (will be available in v0.7.0)
+- History graph of personal records to track improvements (will be available in v0.7.0)
 - Dark theme and Light theme
 - Settings
     - Choose between Dark theme, Light theme or follow system theme

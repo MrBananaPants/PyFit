@@ -171,7 +171,8 @@ def change_theme(theme):
     with open(os.path.join(main_path, "settings.json"), "w") as outfile:
         json.dump(settings, outfile)
     ctk.set_appearance_mode(str(theme).lower())
-    generate_graph()
+    if select_graph_menu.get() != "Select personal record":
+        generate_graph()
 
 
 def update_entries():
